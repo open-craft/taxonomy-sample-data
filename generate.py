@@ -33,6 +33,10 @@ from xmodule.modulestore.exceptions import (
 
 from xmodule.contentstore.django import contentstore
 
+from openedx.core.djangoapps.content_tagging.api import (
+    create_taxonomy, get_taxonomies_for_org, set_taxonomy_orgs
+)
+
 
 # Configuring logger while running in the shell to make it less verbose
 logger = logging.getLogger("taxonomy-sample-data")
@@ -195,6 +199,32 @@ COURSE_NAME = "Sample Taxonomy Course"
 COURSE_NUMBER = "STC1"
 COURSE_RUN = "2023_1"
 
+DISABLED_TAXONOMY_NAME = "DisabledTaxonomy"
+FLAT_TAXONOMY_NAME = "FlatTaxonomy"
+HIERARCHICAL_TAXONOMY_NAME = "HierarchicalTaxonomy"
+TWO_LEVEL_TAXONOMY_NAME = "TwoLevelTaxonomy"
+MULTI_ORG_TAXONOMY_NAME = "MultiOrgTaxonomy"
+
+
+def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
+    """
+    Get or create Taxonomy for Sample Taxonomy Orgs
+
+    Arguments:
+        org_taxonomies: Queryset of an org's existing taxonomies
+        name: Taxonomy name
+        enabled: Whether Taxonomy is enabled/disabled
+        orgs: List of orgs Taxonomy belongs to
+    """
+    try:
+        taxonomy = org_taxonomies.get(name=name, enabled=enabled).cast()
+    except Taxonomy.DoesNotExist:
+        taxonomy = create_taxonomy(name=name, enabled=enabled)
+        set_taxonomy_orgs(taxonomy, orgs=[org])
+
+    return taxonomy
+
+
 # TODO: Remove this and get argument from command line
 # and extract the user instance and user_id (pk)
 user = "edx@example.com"
@@ -202,7 +232,6 @@ user_id = 3
 
 # Generate sample organizations or retrieve them if they already exist
 logger.info("Generating or retrieving sample Organizations...")
-
 sample_orgs = []
 for i in range(1, SAMPLE_ORGS_COUNT+1):
     org, created = Organization.objects.get_or_create(
@@ -216,7 +245,7 @@ store = modulestore()
 
 for org in sample_orgs:
 
-    # Fetch/create Sample Taxonomy Course in org
+    # Retrieve/create Sample Taxonomy Course in org
     logger.info(
         f"Generating or retrieving Sample Taxonomy Courses for {org.short_name}..."
     )
@@ -245,8 +274,48 @@ for org in sample_orgs:
     logger.info(f"Importing OLX data to Sample Taxonomy Course in {org}")
     import_tarfile_in_course(TARFILE_PATH, course_key, user_id)
 
-    # TODO: Create or fetch the various taxonomies
+    # Fetch all Taxonomies (enabled and disabled) for organization
+    logger.info(f"Fetching all Taxonomies for {org}")
+    org_taxonomies = get_taxonomies_for_org(org_owner=org, enabled=None)
 
-    # TODO: Create tags for taxonomies
+    # Retrieve/Create disabled Taxonomy with 10 tags for org
+    logger.info(f"Creating or retrieving {DISABLED_TAXONOMY_NAME}")
+    disabled_taxonomy = get_or_create_taxonomy(
+        org_taxonomies, DISABLED_TAXONOMY_NAME, [org], enabled=False
+    )
 
-    # TODO: Tag units/components in the sample taxonomy courses
+    # TODO: Create tags for disabled_taxonomy
+
+    # Retrieve/Create flat Taxonomy with 5000 tags for org
+    logger.info(f"Creating or retrieving {FLAT_TAXONOMY_NAME}")
+    flat_taxonomy = get_or_create_taxonomy(
+        org_taxonomies, FLAT_TAXONOMY_NAME, [org], enabled=True
+    )
+
+    # TODO: Create tags for flat_taxonomy
+
+    # Retrieve/Create hierarchical Taxonomy with three levels
+    # and 4^x tags per level (4 root tags, each with 16 child tags,
+    # each with 64 grandchild tags) for org
+    logger.info(f"Creating or retrieving {HIERARCHICAL_TAXONOMY_NAME}")
+    heirarchical_taxonomy = get_or_create_taxonomy(
+        org_taxonomies, HIERARCHICAL_TAXONOMY_NAME, [org], enabled=True
+    )
+
+    # TODO: Create tags for heirarchical_taxonomy
+
+    # Retrieve/Create two level Taxonomy with 2 tag each level for org
+    logger.info(f"Creating or retrieving {TWO_LEVEL_TAXONOMY_NAME}")
+    two_level_taxonomy = get_or_create_taxonomy(
+        org_taxonomies, TWO_LEVEL_TAXONOMY_NAME, [org], enabled=True
+    )
+
+    # TODO: Create tags for two_level_taxonomy
+
+# Retrieve/Create multi org Taxonomy with 3 tags for the sample orgs
+logger.info(f"Creating or retrieving {MULTI_ORG_TAXONOMY_NAME}")
+multi_org_taxonomy = get_or_create_taxonomy(
+    org_taxonomies, MULTI_ORG_TAXONOMY_NAME, sample_orgs, enabled=True
+)
+
+# TODO: Create tags for multi_org_taxonomy
