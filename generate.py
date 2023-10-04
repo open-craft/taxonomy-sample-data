@@ -33,6 +33,8 @@ from xmodule.modulestore.exceptions import (
 
 from xmodule.contentstore.django import contentstore
 
+from openedx_tagging.core.tagging.models import Tag
+
 from openedx.core.djangoapps.content_tagging.api import (
     create_taxonomy, get_taxonomies_for_org, set_taxonomy_orgs
 )
@@ -50,6 +52,11 @@ logger_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s - %(mes
 # These utils were extracted (and slightly modified) from the
 # `import_olx` function found in:
 # https://github.com/openedx/edx-platform/blob/194915d6bd050f7a778d2e4e104c56147630851a/cms/djangoapps/contentstore/tasks.py#L449
+
+ALL_ALLOWED_XBLOCKS = frozenset(
+    [entry_point.name for entry_point in pkg_resources.iter_entry_points("xblock.v1")]
+)
+
 
 def verify_root_name_exists(course_dir, root_name):
     """Verify root xml file exists."""
@@ -185,10 +192,6 @@ def import_tarfile_in_course(tarfile_path, course_key, user_id):
 # -----------------------------------------------------------------------------
 
 
-ALL_ALLOWED_XBLOCKS = frozenset(
-    [entry_point.name for entry_point in pkg_resources.iter_entry_points("xblock.v1")]
-)
-
 User = get_user_model()
 
 TARFILE_PATH = '/edx/src/taxonomy-sample-data/course.g4vmy6n2.tar.gz'
@@ -223,6 +226,99 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
         set_taxonomy_orgs(taxonomy, orgs=[org])
 
     return taxonomy
+
+
+def create_tags_for_disabled_taxonomy(disabled_taxonomy):
+    """
+    Create 10 Tags for the disabled_taxonomy
+    """
+    for i in range(10):
+        Tag.objects.create(
+            taxonomy=disabled_taxonomy, value=f"disabled taxonomy tag {i+1}"
+        )
+
+
+def create_tags_for_flat_taxonomy(flat_taxonomy):
+    """
+    Create 5000 Tags for the flat_taxonomy
+    """
+    for i in range(5000):
+        Tag.objects.create(
+            taxonomy=flat_taxonomy, value=f"flat taxonomy tag {i+1}"
+        )
+
+
+def _create_tags_recursively(
+    level, max_levels, tags_multiplier, taxonomy, tag_value_prefix, parent=None
+):
+    """
+    Recursively create tags based on parameters passed in
+
+    Arguments:
+        level: currently level in recursive call
+        max_levels: maximum amount of levels to call recursively
+        tags_multiplier: amount of tags to exponentially add per level, the x in x^level
+        taxonomy: taxonomy tag belongs to
+        tag_value_prefix: prefix of value for tag being created
+        parent: parent of tag being created at this level, None = root level
+    """
+    if level > max_levels:
+        return
+
+    for i in range(tags_multiplier**level):
+
+        if parent is None:
+            tag_value = f"{tag_value_prefix} {i + 1}"
+        else:
+            tag_dynamic_value = parent.value.replace(
+                f"{tag_value_prefix} ", ""
+            )
+            tag_value = f"{tag_value_prefix} {tag_dynamic_value}.{i + 1}"
+
+        tag = Tag.objects.create(
+            taxonomy=taxonomy, value=tag_value, parent=parent
+        )
+
+        _create_tags_recursively(
+            level + 1, max_levels, tags_multiplier,
+            taxonomy, tag_value_prefix, parent=tag
+        )
+
+
+def create_tags_for_hierarchical_taxonomy(hierarchical_taxonomy):
+    """
+    Create 4^x Tags across 3 levels for the hierarchical_taxonomy
+    """
+    MAX_LEVELS = 3
+    TAGS_MULTIPLIER = 4
+
+    _create_tags_recursively(
+        1, MAX_LEVELS, TAGS_MULTIPLIER,
+        hierarchical_taxonomy, "hierarchical taxonomy tag", parent=None
+    )
+
+
+def create_tags_for_two_level_taxonomy(two_level_taxonomy):
+    """
+    Create 2 Tags across 2 levels for the two_level_taxonomy
+    """
+    MAX_LEVELS = 2
+    TAGS_MULTIPLIER = 1
+
+    _create_tags_recursively(
+        1, MAX_LEVELS, TAGS_MULTIPLIER,
+        two_level_taxonomy, "two level tag", parent=None
+    )
+
+
+def create_tags_for_multi_org_taxonomy(multi_org_taxonomy):
+    """
+    Create 5 tags for the multi_org_taxonomy
+    """
+    for i in range(5):
+        Tag.objects.create(
+            taxonomy=multi_org_taxonomy, value=f"multi org taxonomy tag {i}"
+        )
 
 
 # TODO: Remove this and get argument from command line
@@ -284,7 +380,16 @@ for org in sample_orgs:
         org_taxonomies, DISABLED_TAXONOMY_NAME, [org], enabled=False
     )
 
-    # TODO: Create tags for disabled_taxonomy
+    # Clear any existing Tags for disabled_taxonomy and create fresh ones
+    disabled_taxonomy_tags = disabled_taxonomy.get_tags()
+    logger.info(
+        f"Clearing existing {len(disabled_taxonomy_tags)} Tags for {disabled_taxonomy}"
+    )
+    for tag in disabled_taxonomy_tags:
+        tag.delete()
+
+    logger.info(f"Creating fresh Tags for {disabled_taxonomy}")
+    create_tags_for_disabled_taxonomy(disabled_taxonomy)
 
     # Retrieve/Create flat Taxonomy with 5000 tags for org
     logger.info(f"Creating or retrieving {FLAT_TAXONOMY_NAME}")
@@ -292,17 +397,33 @@ for org in sample_orgs:
         org_taxonomies, FLAT_TAXONOMY_NAME, [org], enabled=True
     )
 
-    # TODO: Create tags for flat_taxonomy
+    # Clear any existing Tags for flat_taxonomy and create fresh ones
+    flat_taxonomy_tags = flat_taxonomy.get_tags()
+    logger.info(f"Clearing existing {len(flat_taxonomy_tags)} Tags for {flat_taxonomy}")
+    for tag in flat_taxonomy_tags:
+        tag.delete()
+
+    logger.info(f"Creating fresh Tags for {flat_taxonomy}")
+    create_tags_for_flat_taxonomy(flat_taxonomy)
 
     # Retrieve/Create hierarchical Taxonomy with three levels
     # and 4^x tags per level (4 root tags, each with 16 child tags,
     # each with 64 grandchild tags) for org
     logger.info(f"Creating or retrieving {HIERARCHICAL_TAXONOMY_NAME}")
-    heirarchical_taxonomy = get_or_create_taxonomy(
+    hierarchical_taxonomy = get_or_create_taxonomy(
         org_taxonomies, HIERARCHICAL_TAXONOMY_NAME, [org], enabled=True
     )
 
-    # TODO: Create tags for heirarchical_taxonomy
+    # Clear any existing Tags for hierarchical_taxonomy and create fresh ones
+    hierarchical_taxonomy_tags = hierarchical_taxonomy.get_tags()
+    logger.info(
+        f"Clearing existing {len(hierarchical_taxonomy_tags)} Tags for {hierarchical_taxonomy}"
+    )
+    for tag in hierarchical_taxonomy_tags:
+        tag.delete()
+
+    logger.info(f"Creating fresh Tags for {hierarchical_taxonomy}")
+    create_tags_for_hierarchical_taxonomy(hierarchical_taxonomy)
 
     # Retrieve/Create two level Taxonomy with 2 tag each level for org
     logger.info(f"Creating or retrieving {TWO_LEVEL_TAXONOMY_NAME}")
@@ -310,7 +431,16 @@ for org in sample_orgs:
         org_taxonomies, TWO_LEVEL_TAXONOMY_NAME, [org], enabled=True
     )
 
-    # TODO: Create tags for two_level_taxonomy
+    # Clear any existing tags for two_level_taxonomy and create fresh ones
+    two_level_taxonomy_tags = two_level_taxonomy.get_tags()
+    logger.info(
+        f"Clearing existing {len(two_level_taxonomy_tags)} Tags for {two_level_taxonomy}"
+    )
+    for tag in two_level_taxonomy_tags:
+        tag.delete()
+
+    logger.info(f"Creating fresh Tags for {two_level_taxonomy}")
+    create_tags_for_two_level_taxonomy(two_level_taxonomy)
 
 # Retrieve/Create multi org Taxonomy with 3 tags for the sample orgs
 logger.info(f"Creating or retrieving {MULTI_ORG_TAXONOMY_NAME}")
@@ -318,4 +448,11 @@ multi_org_taxonomy = get_or_create_taxonomy(
     org_taxonomies, MULTI_ORG_TAXONOMY_NAME, sample_orgs, enabled=True
 )
 
-# TODO: Create tags for multi_org_taxonomy
+# Clear any existing Tags for hierarchical_taxonomy and create fresh ones
+multi_org_taxonomy_tags = multi_org_taxonomy.get_tags()
+logger.info(f"Clearing existing {len(multi_org_taxonomy_tags)} Tags for {multi_org_taxonomy}")
+for tag in multi_org_taxonomy_tags:
+    tag.delete()
+
+logger.info(f"Creating fresh Tags for {multi_org_taxonomy}")
+create_tags_for_multi_org_taxonomy(multi_org_taxonomy)
