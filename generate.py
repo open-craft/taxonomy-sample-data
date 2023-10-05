@@ -5,6 +5,7 @@ import pkg_resources
 import shutil
 import tarfile
 import logging
+import tqdm
 
 from path import Path as path
 from olxcleaner.exceptions import ErrorLevel
@@ -12,10 +13,9 @@ from olxcleaner.exceptions import ErrorLevel
 from django.conf import settings
 from django.core.exceptions import SuspiciousOperation
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 
 from organizations.models import Organization
-
-from opaque_keys.edx.keys import CourseKey
 
 from openedx.core.lib.extract_tar import safetar_extractall
 
@@ -33,10 +33,16 @@ from xmodule.modulestore.exceptions import (
 
 from xmodule.contentstore.django import contentstore
 
-from openedx_tagging.core.tagging.models import Tag
+from openedx_tagging.core.tagging.models import Tag, Taxonomy
 
 from openedx.core.djangoapps.content_tagging.api import (
-    create_taxonomy, get_taxonomies_for_org, set_taxonomy_orgs
+    create_taxonomy, get_taxonomies_for_org,
+    set_taxonomy_orgs, tag_content_object, get_content_tags,
+    resync_object_tags
+)
+
+from openedx.core.djangoapps.discussions.tasks import (
+    get_sections, get_subsections, get_units
 )
 
 
@@ -214,16 +220,20 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
     Get or create Taxonomy for Sample Taxonomy Orgs
 
     Arguments:
-        org_taxonomies: Queryset of an org's existing taxonomies
+        org_taxonomies: Queryset of an org's existing taxonomies or
+                        None if it should be for all orgs
         name: Taxonomy name
         enabled: Whether Taxonomy is enabled/disabled
         orgs: List of orgs Taxonomy belongs to
     """
     try:
-        taxonomy = org_taxonomies.get(name=name, enabled=enabled).cast()
+        if org_taxonomies is None:
+            taxonomy = Taxonomy.objects.get(name=name, enabled=enabled).cast()
+        else:
+            taxonomy = org_taxonomies.get(name=name, enabled=enabled).cast()
     except Taxonomy.DoesNotExist:
         taxonomy = create_taxonomy(name=name, enabled=enabled)
-        set_taxonomy_orgs(taxonomy, orgs=[org])
+        set_taxonomy_orgs(taxonomy, orgs=orgs)
 
     return taxonomy
 
@@ -321,6 +331,18 @@ def create_tags_for_multi_org_taxonomy(multi_org_taxonomy):
         )
 
 
+def tagify_object(object_id, taxonomies):
+    for taxonomy in taxonomies:
+        tag = taxonomy.get_tags()[0]
+        try:
+            tag_content_object(taxonomy, [tag.id], object_id)
+        except IntegrityError:
+            # content tag value already exists, we need to resync with
+            # new tag instance
+            content_tags = list(get_content_tags(object_id, taxonomy.id))
+            resync_object_tags(content_tags)
+
+
 # TODO: Remove this and get argument from command line
 # and extract the user instance and user_id (pk)
 user = "edx@example.com"
@@ -338,6 +360,22 @@ for i in range(1, SAMPLE_ORGS_COUNT+1):
     sample_orgs.append(org)
 
 store = modulestore()
+
+# Retrieve/Create multi org Taxonomy with 5 tags for the sample orgs
+logger.info(f"Creating or retrieving {MULTI_ORG_TAXONOMY_NAME}")
+multi_org_taxonomy = get_or_create_taxonomy(
+    None, MULTI_ORG_TAXONOMY_NAME, sample_orgs, enabled=True
+)
+
+# Clear any existing Tags for hierarchical_taxonomy and create fresh ones
+multi_org_taxonomy_tags = multi_org_taxonomy.get_tags()
+logger.info(f"Clearing existing {len(multi_org_taxonomy_tags)} Tags for {multi_org_taxonomy}")
+for tag in tqdm.tqdm(multi_org_taxonomy_tags):
+    tag.delete()
+
+logger.info(f"Creating fresh Tags for {multi_org_taxonomy}")
+multi_org_taxonomy_tags = create_tags_for_multi_org_taxonomy(multi_org_taxonomy)
+
 
 for org in sample_orgs:
 
@@ -385,7 +423,7 @@ for org in sample_orgs:
     logger.info(
         f"Clearing existing {len(disabled_taxonomy_tags)} Tags for {disabled_taxonomy}"
     )
-    for tag in disabled_taxonomy_tags:
+    for tag in tqdm.tqdm(disabled_taxonomy_tags):
         tag.delete()
 
     logger.info(f"Creating fresh Tags for {disabled_taxonomy}")
@@ -400,7 +438,7 @@ for org in sample_orgs:
     # Clear any existing Tags for flat_taxonomy and create fresh ones
     flat_taxonomy_tags = flat_taxonomy.get_tags()
     logger.info(f"Clearing existing {len(flat_taxonomy_tags)} Tags for {flat_taxonomy}")
-    for tag in flat_taxonomy_tags:
+    for tag in tqdm.tqdm(flat_taxonomy_tags):
         tag.delete()
 
     logger.info(f"Creating fresh Tags for {flat_taxonomy}")
@@ -419,7 +457,7 @@ for org in sample_orgs:
     logger.info(
         f"Clearing existing {len(hierarchical_taxonomy_tags)} Tags for {hierarchical_taxonomy}"
     )
-    for tag in hierarchical_taxonomy_tags:
+    for tag in tqdm.tqdm(hierarchical_taxonomy_tags):
         tag.delete()
 
     logger.info(f"Creating fresh Tags for {hierarchical_taxonomy}")
@@ -436,23 +474,35 @@ for org in sample_orgs:
     logger.info(
         f"Clearing existing {len(two_level_taxonomy_tags)} Tags for {two_level_taxonomy}"
     )
-    for tag in two_level_taxonomy_tags:
+    for tag in tqdm.tqdm(two_level_taxonomy_tags):
         tag.delete()
 
     logger.info(f"Creating fresh Tags for {two_level_taxonomy}")
     create_tags_for_two_level_taxonomy(two_level_taxonomy)
 
-# Retrieve/Create multi org Taxonomy with 3 tags for the sample orgs
-logger.info(f"Creating or retrieving {MULTI_ORG_TAXONOMY_NAME}")
-multi_org_taxonomy = get_or_create_taxonomy(
-    org_taxonomies, MULTI_ORG_TAXONOMY_NAME, sample_orgs, enabled=True
-)
+    # Tagging Courses and Components
 
-# Clear any existing Tags for hierarchical_taxonomy and create fresh ones
-multi_org_taxonomy_tags = multi_org_taxonomy.get_tags()
-logger.info(f"Clearing existing {len(multi_org_taxonomy_tags)} Tags for {multi_org_taxonomy}")
-for tag in multi_org_taxonomy_tags:
-    tag.delete()
+    # Tag course with one of each tag in taxonomies created above
+    logger.info(f"Tagging {sample_taxonomy_course}")
+    tagify_object(
+        sample_taxonomy_course.id,
+        [
+            disabled_taxonomy, flat_taxonomy,
+            hierarchical_taxonomy, two_level_taxonomy
+        ]
+    )
 
-logger.info(f"Creating fresh Tags for {multi_org_taxonomy}")
-create_tags_for_multi_org_taxonomy(multi_org_taxonomy)
+    # Tag components inside units (vertical xblocks) with
+    # one of each tag created above
+    for section in get_sections(sample_taxonomy_course):
+        for subsection in get_subsections(section):
+            for unit in get_units(subsection):
+                for child in unit.get_children():
+                    logger.info(f"Tagging {child.location}")
+                    tagify_object(
+                        child.location,
+                        [
+                            disabled_taxonomy, flat_taxonomy,
+                            hierarchical_taxonomy, two_level_taxonomy
+                        ]
+                    )
