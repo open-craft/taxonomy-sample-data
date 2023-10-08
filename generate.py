@@ -6,6 +6,7 @@ import shutil
 import tarfile
 import logging
 import tqdm
+import json
 
 from path import Path as path
 from olxcleaner.exceptions import ErrorLevel
@@ -214,6 +215,9 @@ HIERARCHICAL_TAXONOMY_NAME = "HierarchicalTaxonomy"
 TWO_LEVEL_TAXONOMY_NAME = "TwoLevelTaxonomy"
 MULTI_ORG_TAXONOMY_NAME = "MultiOrgTaxonomy"
 
+IMPORT_OPEN_CANADA_TAXONOMY = False
+IMPORT_LIGHTCAST_SKILLS_TAXONOMIES = False
+
 
 def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
     """
@@ -329,6 +333,31 @@ def create_tags_for_multi_org_taxonomy(multi_org_taxonomy):
         Tag.objects.create(
             taxonomy=multi_org_taxonomy, value=f"multi org taxonomy tag {i}"
         )
+
+
+def create_tags_for_open_canada_taxonomy(open_canada_taxonomy):
+    """
+    Create tags based what is defined in the Open Canada Taxonomy export
+    """
+    OPEN_CANADA_TAXONOMY_PATH = '/edx/src/taxonomy-sample-data/open_canada_taxonomy.json'
+
+    def _create_tags(taxonomy_data, parent):
+        if len(taxonomy_data) == 0:
+            return
+
+        for data in taxonomy_data:
+            tag = Tag.objects.create(
+                taxonomy=open_canada_taxonomy,
+                value=data.get("Name"),
+                parent=parent,
+                external_id=data.get("Code")
+            )
+            _create_tags(data.get("children"), tag)
+
+    with open(OPEN_CANADA_TAXONOMY_PATH, 'r') as json_file:
+        taxonomy_data = json.load(json_file)
+
+    _create_tags(taxonomy_data, None)
 
 
 def tagify_object(object_id, taxonomies):
@@ -480,16 +509,45 @@ for org in sample_orgs:
     logger.info(f"Creating fresh Tags for {two_level_taxonomy}")
     create_tags_for_two_level_taxonomy(two_level_taxonomy)
 
+    generated_taxonomies = [
+        disabled_taxonomy, flat_taxonomy,
+        hierarchical_taxonomy, two_level_taxonomy
+    ]
+
+    if IMPORT_OPEN_CANADA_TAXONOMY:
+        OPEN_CANADA_TAXONOMY_NAME = "OpenCanadaTaxonomy"
+
+        # Retrieve/Create Open Canada Taxonomy:
+        # https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c/resource/0a120b15-9708-4d8a-8af2-2431c4540c0b
+        # It has four levels (Category > Sub-Category > Similarity Group > Descriptor
+        logger.info(f"Creating or retrieving {OPEN_CANADA_TAXONOMY_NAME}")
+        open_canada_taxonomy = get_or_create_taxonomy(
+            org_taxonomies, OPEN_CANADA_TAXONOMY_NAME, [org], enabled=True
+        )
+
+        # Clear any existing Tags for open_canada_taxonomy and create fresh ones
+        open_canada_taxonomy_tags = open_canada_taxonomy.get_tags()
+        logger.info(
+            f"Clearing existing {len(open_canada_taxonomy_tags)} Tags for {open_canada_taxonomy}"
+        )
+        for tag in tqdm.tqdm(open_canada_taxonomy_tags):
+            tag.delete()
+
+        logger.info(f"Creating fresh Tags for {open_canada_taxonomy}")
+        create_tags_for_open_canada_taxonomy(open_canada_taxonomy)
+
+        generated_taxonomies.append(open_canada_taxonomy)
+
+    if IMPORT_LIGHTCAST_SKILLS_TAXONOMIES:
+        pass
+
     # Tagging Courses and Components
 
     # Tag course with one of each tag in taxonomies created above
     logger.info(f"Tagging {sample_taxonomy_course}")
     tagify_object(
         sample_taxonomy_course.id,
-        [
-            disabled_taxonomy, flat_taxonomy,
-            hierarchical_taxonomy, two_level_taxonomy
-        ]
+        generated_taxonomies
     )
 
     # Tag components inside units (vertical xblocks) with
@@ -501,8 +559,5 @@ for org in sample_orgs:
                     logger.info(f"Tagging {child.location}")
                     tagify_object(
                         child.location,
-                        [
-                            disabled_taxonomy, flat_taxonomy,
-                            hierarchical_taxonomy, two_level_taxonomy
-                        ]
+                        generated_taxonomies
                     )
