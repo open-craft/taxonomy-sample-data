@@ -201,6 +201,10 @@ def import_tarfile_in_course(tarfile_path, course_key, user_id):
 
 User = get_user_model()
 
+USER_EMAIL = "edx@example.com"
+
+user = User.objects.get(email=USER_EMAIL)
+
 TARFILE_PATH = '/edx/src/taxonomy-sample-data/course.g4vmy6n2.tar.gz'
 
 SAMPLE_ORGS_COUNT = 2
@@ -216,7 +220,7 @@ TWO_LEVEL_TAXONOMY_NAME = "TwoLevelTaxonomy"
 MULTI_ORG_TAXONOMY_NAME = "MultiOrgTaxonomy"
 
 IMPORT_OPEN_CANADA_TAXONOMY = False
-IMPORT_LIGHTCAST_SKILLS_TAXONOMIES = False
+IMPORT_LIGHTCAST_SKILLS_TAXONOMY = False
 
 
 def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
@@ -335,11 +339,10 @@ def create_tags_for_multi_org_taxonomy(multi_org_taxonomy):
         )
 
 
-def create_tags_for_open_canada_taxonomy(open_canada_taxonomy):
+def create_tags_from_json(open_canada_taxonomy, import_json_path):
     """
-    Create tags based what is defined in the Open Canada Taxonomy export
+    Create tags based what is defined in JSON import spec
     """
-    OPEN_CANADA_TAXONOMY_PATH = '/edx/src/taxonomy-sample-data/open_canada_taxonomy.json'
 
     def _create_tags(taxonomy_data, parent):
         if len(taxonomy_data) == 0:
@@ -348,34 +351,36 @@ def create_tags_for_open_canada_taxonomy(open_canada_taxonomy):
         for data in taxonomy_data:
             tag = Tag.objects.create(
                 taxonomy=open_canada_taxonomy,
-                value=data.get("Name"),
+                value=data.get("name"),
                 parent=parent,
-                external_id=data.get("Code")
+                external_id=data.get("external_id")
             )
             _create_tags(data.get("children"), tag)
 
-    with open(OPEN_CANADA_TAXONOMY_PATH, 'r') as json_file:
+    with open(import_json_path, 'r') as json_file:
         taxonomy_data = json.load(json_file)
 
     _create_tags(taxonomy_data, None)
 
 
 def tagify_object(object_id, taxonomies):
+    """
+    Tag object with tags from the provided taxonomies
+
+    Arguments:
+        object_id: ID of object to be tagged
+        taxonomies: list of taxonomies of tags to tag object with
+    """
     for taxonomy in taxonomies:
         tag = taxonomy.get_tags()[0]
         try:
-            tag_content_object(taxonomy, [tag.id], object_id)
+            tag_content_object(object_id, taxonomy, [tag.value])
         except IntegrityError:
             # content tag value already exists, we need to resync with
             # new tag instance
             content_tags = list(get_content_tags(object_id, taxonomy.id))
             resync_object_tags(content_tags)
 
-
-# TODO: Remove this and get argument from command line
-# and extract the user instance and user_id (pk)
-user = "edx@example.com"
-user_id = 3
 
 # Generate sample organizations or retrieve them if they already exist
 logger.info("Generating or retrieving sample Organizations...")
@@ -425,7 +430,7 @@ for org in sample_orgs:
             }
             sample_taxonomy_course = create_new_course_in_store(
                 ModuleStoreEnum.Type.split,
-                User.objects.get(email=user),  # TODO: Needs to be passed in as argument
+                user,
                 org.short_name,
                 COURSE_NUMBER,
                 COURSE_RUN,
@@ -435,7 +440,7 @@ for org in sample_orgs:
 
     # Populate Sample Taxonomy Course with imported course data
     logger.info(f"Importing OLX data to Sample Taxonomy Course in {org}")
-    import_tarfile_in_course(TARFILE_PATH, course_key, user_id)
+    import_tarfile_in_course(TARFILE_PATH, course_key, user.id)
 
     # Fetch all Taxonomies (enabled and disabled) for organization
     logger.info(f"Fetching all Taxonomies for {org}")
@@ -516,6 +521,7 @@ for org in sample_orgs:
 
     if IMPORT_OPEN_CANADA_TAXONOMY:
         OPEN_CANADA_TAXONOMY_NAME = "OpenCanadaTaxonomy"
+        OPEN_CANADA_TAXONOMY_PATH = "/edx/src/taxonomy-sample-data/sample_data/open_canada_taxonomy.json"
 
         # Retrieve/Create Open Canada Taxonomy:
         # https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c/resource/0a120b15-9708-4d8a-8af2-2431c4540c0b
@@ -534,17 +540,41 @@ for org in sample_orgs:
             tag.delete()
 
         logger.info(f"Creating fresh Tags for {open_canada_taxonomy}")
-        create_tags_for_open_canada_taxonomy(open_canada_taxonomy)
+
+        create_tags_from_json(open_canada_taxonomy, OPEN_CANADA_TAXONOMY_PATH)
 
         generated_taxonomies.append(open_canada_taxonomy)
 
-    if IMPORT_LIGHTCAST_SKILLS_TAXONOMIES:
-        pass
+    if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
+        LIGHTCAST_SKILLS_TAXONOMY_NAME = "LightCastSkillsTaxonomy"
+        LIGHTCAST_SKILLS_TAXONOMY_PATH = "/edx/src/taxonomy-sample-data/sample_data/lightcast_taxonomy.json"
+
+        # Retrieve/Create LightCast Skills Taxonomy:
+        # https://docs.google.com/spreadsheets/d/1DA3JfpBE5Krc0daImuu5Y0nsH93PEfdrWRrEa-sR-6k/edit#gid=1319222368
+        # It has three levels (Category > Sub-Category > Skill
+        logger.info(f"Creating or retrieving {LIGHTCAST_SKILLS_TAXONOMY_NAME}")
+        lightcast_skills_taxonomy = get_or_create_taxonomy(
+            org_taxonomies, LIGHTCAST_SKILLS_TAXONOMY_NAME, [org], enabled=True
+        )
+
+        # Clear any existing Tags for lightcast_skills_taxonomy and create fresh ones
+        lightcast_skills_taxonomy_tags = lightcast_skills_taxonomy.get_tags()
+        logger.info(
+            f"Clearing existing {len(lightcast_skills_taxonomy_tags)} Tags for {lightcast_skills_taxonomy}"
+        )
+        for tag in tqdm.tqdm(lightcast_skills_taxonomy_tags):
+            tag.delete()
+
+        logger.info(f"Creating fresh Tags for {lightcast_skills_taxonomy}")
+
+        create_tags_from_json(lightcast_skills_taxonomy, LIGHTCAST_SKILLS_TAXONOMY_PATH)
+
+        generated_taxonomies.append(lightcast_skills_taxonomy)
 
     # Tagging Courses and Components
 
     # Tag course with one of each tag in taxonomies created above
-    logger.info(f"Tagging {sample_taxonomy_course}")
+    logger.info(f"Tagging {sample_taxonomy_course.id}")
     tagify_object(
         sample_taxonomy_course.id,
         generated_taxonomies

@@ -1,0 +1,2228 @@
+[
+   {
+      "name":"Abilities",
+      "external_id":"A",
+      "children":[
+         {
+            "name":"Cognitive Abilities",
+            "external_id":"A01",
+            "children":[
+               {
+                  "name":"Idea Generation and Reasoning Abilities",
+                  "external_id":"A01a",
+                  "children":[
+                     {
+                        "name":"Information Ordering",
+                        "external_id":"A01a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Categorization Flexibility",
+                        "external_id":"A01a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Deductive Reasoning",
+                        "external_id":"A01a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Inductive Reasoning",
+                        "external_id":"A01a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Fluency of Ideas",
+                        "external_id":"A01a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Problem Identification",
+                        "external_id":"A01a06",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Quantitative Abilities",
+                  "external_id":"A01b",
+                  "children":[
+                     {
+                        "name":"Numerical Ability",
+                        "external_id":"A01b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Mathematical Reasoning",
+                        "external_id":"A01b02",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Memory Abilities",
+                  "external_id":"A01c",
+                  "children":[
+                     {
+                        "name":"Memorizing",
+                        "external_id":"A01c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Multitasking",
+                        "external_id":"A01c02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Pattern Identification",
+                        "external_id":"A01c03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Pattern Organization Speed",
+                        "external_id":"A01c04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Perceptual Speed",
+                        "external_id":"A01c05",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Spacial Abilities",
+                  "external_id":"A01d",
+                  "children":[
+                     {
+                        "name":"Spatial Orientation",
+                        "external_id":"A01d01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Spatial Visualization",
+                        "external_id":"A01d02",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Communication Abilities",
+                  "external_id":"A01e",
+                  "children":[
+                     {
+                        "name":"Verbal Ability",
+                        "external_id":"A01e01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Written Comprehension",
+                        "external_id":"A01e02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Written Expression",
+                        "external_id":"A01e03",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Other Cognitive Abilities",
+                  "external_id":"A01f",
+                  "children":[
+                     {
+                        "name":"Selective Attention",
+                        "external_id":"A01f01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Form Perception",
+                        "external_id":"A01f02",
+                        "children":[]
+                     },
+                     {
+                        "name":"General Learning Ability",
+                        "external_id":"A01f03",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Physical Abilities",
+            "external_id":"A02",
+            "children":[
+               {
+                  "name":"Physical Strength Abilities",
+                  "external_id":"A02a",
+                  "children":[
+                     {
+                        "name":"Trunk Strength",
+                        "external_id":"A02a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Static Strength",
+                        "external_id":"A02a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Dynamic Strength",
+                        "external_id":"A02a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Explosive Strength",
+                        "external_id":"A02a04",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Flexibility, Balance, and Coordination",
+                  "external_id":"A02b",
+                  "children":[
+                     {
+                        "name":"Multi-Limb Coordination",
+                        "external_id":"A02b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Gross Body Coordination",
+                        "external_id":"A02b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Gross Body Equilibrium",
+                        "external_id":"A02b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Body Flexibility",
+                        "external_id":"A02b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Dynamic Flexibility",
+                        "external_id":"A02b05",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Endurance",
+                  "external_id":"A02c",
+                  "children":[
+                     {
+                        "name":"Stamina",
+                        "external_id":"A02c01",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Psychomotor Abilities",
+            "external_id":"A03",
+            "children":[
+               {
+                  "name":"Fine Manipulative Abilities",
+                  "external_id":"A03a",
+                  "children":[
+                     {
+                        "name":"Arm-Hand Steadiness",
+                        "external_id":"A03a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Finger Dexterity",
+                        "external_id":"A03a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Manual Dexterity",
+                        "external_id":"A03a03",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Control Movement Abilities",
+                  "external_id":"A03b",
+                  "children":[
+                     {
+                        "name":"Motor Coordination",
+                        "external_id":"A03b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Rate Control",
+                        "external_id":"A03b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Control of Settings",
+                        "external_id":"A03b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Multi-Signal Response",
+                        "external_id":"A03b04",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Reaction Time and Speed Abilities",
+                  "external_id":"A03c",
+                  "children":[
+                     {
+                        "name":"Reaction Time",
+                        "external_id":"A03c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Speed of Limb Movement",
+                        "external_id":"A03c02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Finger-Hand-Wrist Motion",
+                        "external_id":"A03c03",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Sensory Abilities",
+            "external_id":"A04",
+            "children":[
+               {
+                  "name":"Auditory and Speech Abilities",
+                  "external_id":"A04a",
+                  "children":[
+                     {
+                        "name":"Auditory Attention",
+                        "external_id":"A04a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Hearing Sensitivity",
+                        "external_id":"A04a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Speech Clarity",
+                        "external_id":"A04a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Speech Recognition",
+                        "external_id":"A04a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Sound Localization",
+                        "external_id":"A04a05",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Visual Abilities",
+                  "external_id":"A04b",
+                  "children":[
+                     {
+                        "name":"Far Vision",
+                        "external_id":"A04b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Near Vision",
+                        "external_id":"A04b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Peripheral Vision",
+                        "external_id":"A04b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Depth Perception",
+                        "external_id":"A04b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Glare Tolerance",
+                        "external_id":"A04b05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Night Vision",
+                        "external_id":"A04b06",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Other Sensory Abilities",
+                  "external_id":"A04c",
+                  "children":[
+                     {
+                        "name":"Colour Perception",
+                        "external_id":"A04c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Smell",
+                        "external_id":"A04c02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Taste",
+                        "external_id":"A04c03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Touch",
+                        "external_id":"A04c04",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   },
+   {
+      "name":"Personal Attributes",
+      "external_id":"B",
+      "children":[
+         {
+            "name":"Social Traits",
+            "external_id":"B01",
+            "children":[
+               {
+                  "name":"Social Influence",
+                  "external_id":"B01a",
+                  "children":[
+                     {
+                        "name":"Leadership",
+                        "external_id":"B01a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Charisma",
+                        "external_id":"B01a02",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Interpersonal Orientation",
+                  "external_id":"B01b",
+                  "children":[
+                     {
+                        "name":"Concern for Others",
+                        "external_id":"B01b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Collaboration",
+                        "external_id":"B01b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Service Orientation",
+                        "external_id":"B01b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Trust in Others",
+                        "external_id":"B01b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Social Orientation",
+                        "external_id":"B01b05",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Self-Improvement",
+            "external_id":"B02",
+            "children":[
+               {
+                  "name":"Adjustment",
+                  "external_id":"B02a",
+                  "children":[
+                     {
+                        "name":"Adaptability",
+                        "external_id":"B02a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Self-Control",
+                        "external_id":"B02a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Stress Tolerance",
+                        "external_id":"B02a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Tolerance of Ambiguity",
+                        "external_id":"B02a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Resilience",
+                        "external_id":"B02a05",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Self-Reflective Orientation",
+                  "external_id":"B02b",
+                  "children":[
+                     {
+                        "name":"Self-Awareness",
+                        "external_id":"B02b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Self-Confidence",
+                        "external_id":"B02b02",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Learning Orientation",
+                  "external_id":"B02c",
+                  "children":[
+                     {
+                        "name":"Active Learning",
+                        "external_id":"B02c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Continuous Learning",
+                        "external_id":"B02c02",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Results-Based Attributes",
+            "external_id":"B03",
+            "children":[
+               {
+                  "name":"Action-Oriented",
+                  "external_id":"B03a",
+                  "children":[
+                     {
+                        "name":"Achievement",
+                        "external_id":"B03a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Initiative",
+                        "external_id":"B03a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Motivation",
+                        "external_id":"B03a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Perseverance",
+                        "external_id":"B03a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Risk-Taking",
+                        "external_id":"B03a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Competitiveness",
+                        "external_id":"B03a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Independence",
+                        "external_id":"B03a07",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Professional Conscientiousness",
+            "external_id":"B04",
+            "children":[
+               {
+                  "name":"Sense of Responsibility",
+                  "external_id":"B04a",
+                  "children":[
+                     {
+                        "name":"Reliable",
+                        "external_id":"B04a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Integrity",
+                        "external_id":"B04a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Being Responsible",
+                        "external_id":"B04a03",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Dynamic Thinking",
+            "external_id":"B05",
+            "children":[
+               {
+                  "name":"Practical Thinking",
+                  "external_id":"B05a",
+                  "children":[
+                     {
+                        "name":"Having Judgement",
+                        "external_id":"B05a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Analytical Thinking",
+                        "external_id":"B05a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Attention to Detail",
+                        "external_id":"B05a03",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Unconventional Thinking",
+                  "external_id":"B05b",
+                  "children":[
+                     {
+                        "name":"Creativity",
+                        "external_id":"B05b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Innovativeness",
+                        "external_id":"B05b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Entrepreneurial Spirit",
+                        "external_id":"B05b03",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   },
+   {
+      "name":"Interests",
+      "external_id":"C",
+      "children":[
+         {
+            "name":"Holland Codes",
+            "external_id":"C01",
+            "children":[
+               {
+                  "name":"Interests - Holland Codes",
+                  "external_id":"C01a",
+                  "children":[
+                     {
+                        "name":"Realistic",
+                        "external_id":"C01a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Investigative",
+                        "external_id":"C01a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Artistic",
+                        "external_id":"C01a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Social",
+                        "external_id":"C01a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Enterprising",
+                        "external_id":"C01a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Conventional",
+                        "external_id":"C01a06",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   },
+   {
+      "name":"Skills",
+      "external_id":"F",
+      "children":[
+         {
+            "name":"Foundational Skills",
+            "external_id":"F01",
+            "children":[
+               {
+                  "name":"Verbal Skills",
+                  "external_id":"F01a",
+                  "children":[
+                     {
+                        "name":"Oral Communication: Active Listening",
+                        "external_id":"F01a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Oral Communication: Oral Comprehension",
+                        "external_id":"F01a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Oral Communication: Oral Expression",
+                        "external_id":"F01a03",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Reading and Writing Skills",
+                  "external_id":"F01b",
+                  "children":[
+                     {
+                        "name":"Reading Comprehension",
+                        "external_id":"F01b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Writing",
+                        "external_id":"F01b02",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Mathematical Skills",
+                  "external_id":"F01c",
+                  "children":[
+                     {
+                        "name":"Numeracy",
+                        "external_id":"F01c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Digital Literacy",
+                        "external_id":"F01c02",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Analytical Skills",
+            "external_id":"F02",
+            "children":[
+               {
+                  "name":"Process Analysis Skills",
+                  "external_id":"F02a",
+                  "children":[
+                     {
+                        "name":"Critical Thinking",
+                        "external_id":"F02a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Learning and Teaching Strategies",
+                        "external_id":"F02a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Decision Making",
+                        "external_id":"F02a03",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Operations and Systems Analysis Skills",
+                  "external_id":"F02b",
+                  "children":[
+                     {
+                        "name":"Evaluation",
+                        "external_id":"F02b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Requirements Analysis",
+                        "external_id":"F02b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Systems Analysis",
+                        "external_id":"F02b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Researching and Investigating",
+                        "external_id":"F02b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Problem Solving",
+                        "external_id":"F02b05",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Technical Skills Sub-Category",
+            "external_id":"F03",
+            "children":[
+               {
+                  "name":"Technical Skills",
+                  "external_id":"F03a",
+                  "children":[
+                     {
+                        "name":"Equipment and Tool Selection",
+                        "external_id":"F03a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Preventative Maintenance",
+                        "external_id":"F03a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Setting Up",
+                        "external_id":"F03a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Operation and Control",
+                        "external_id":"F03a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Operation Monitoring of Machinery and Equipment",
+                        "external_id":"F03a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Troubleshooting",
+                        "external_id":"F03a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Repairing",
+                        "external_id":"F03a07",
+                        "children":[]
+                     },
+                     {
+                        "name":"Quality Control Testing",
+                        "external_id":"F03a08",
+                        "children":[]
+                     },
+                     {
+                        "name":"Product Design",
+                        "external_id":"F03a09",
+                        "children":[]
+                     },
+                     {
+                        "name":"Digital Production",
+                        "external_id":"F03a10",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Resource Management Skills Sub-Category",
+            "external_id":"F04",
+            "children":[
+               {
+                  "name":"Resource Management Skills",
+                  "external_id":"F04a",
+                  "children":[
+                     {
+                        "name":"Management of Financial Resources",
+                        "external_id":"F04a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Management of Material Resources",
+                        "external_id":"F04a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Management of Personnel Resources",
+                        "external_id":"F04a03",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Planning Skills",
+                  "external_id":"F04b",
+                  "children":[
+                     {
+                        "name":"Operational Planning",
+                        "external_id":"F04b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Projecting Outcomes",
+                        "external_id":"F04b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Risk Management",
+                        "external_id":"F04b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Strategic Planning",
+                        "external_id":"F04b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Time Management",
+                        "external_id":"F04b05",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Monitoring Sub-Category",
+                  "external_id":"F04c",
+                  "children":[
+                     {
+                        "name":"Monitoring",
+                        "external_id":"F04c01",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Change Management and Crisis Management Skills",
+                  "external_id":"F04d",
+                  "children":[
+                     {
+                        "name":"Change Management",
+                        "external_id":"F04d01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Crisis Management",
+                        "external_id":"F04d02",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Interpersonal Skills Sub-Category",
+            "external_id":"F05",
+            "children":[
+               {
+                  "name":"Interpersonal Skills",
+                  "external_id":"F05a",
+                  "children":[
+                     {
+                        "name":"Coordinating",
+                        "external_id":"F05a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Instructing",
+                        "external_id":"F05a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Negotiating",
+                        "external_id":"F05a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Persuading",
+                        "external_id":"F05a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Social Perceptiveness",
+                        "external_id":"F05a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Cross-Cultural Sensitivity",
+                        "external_id":"F05a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Managing Conversation",
+                        "external_id":"F05a07",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   },
+   {
+      "name":"Knowledge",
+      "external_id":"G",
+      "children":[
+         {
+            "name":"Administration and Management Sub-Category",
+            "external_id":"G01",
+            "children":[
+               {
+                  "name":"Administration and Management",
+                  "external_id":"G01a",
+                  "children":[
+                     {
+                        "name":"Accounting",
+                        "external_id":"G01a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Business Management",
+                        "external_id":"G01a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Clerical",
+                        "external_id":"G01a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Finance",
+                        "external_id":"G01a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Human Resources and Labour relations",
+                        "external_id":"G01a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Sale and Marketing",
+                        "external_id":"G01a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Client Service",
+                        "external_id":"G01a07",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Communication Sub-Category",
+            "external_id":"G02",
+            "children":[
+               {
+                  "name":"Communication",
+                  "external_id":"G02a",
+                  "children":[
+                     {
+                        "name":"Communications and Media",
+                        "external_id":"G02a01",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Education Sub-Category",
+            "external_id":"G03",
+            "children":[
+               {
+                  "name":"Education",
+                  "external_id":"G03a",
+                  "children":[
+                     {
+                        "name":"Teaching",
+                        "external_id":"G03a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Training, Mentoring and Coaching",
+                        "external_id":"G03a02",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Health and Wellbeing Sub-Category",
+            "external_id":"G04",
+            "children":[
+               {
+                  "name":"Health and Wellbeing",
+                  "external_id":"G04a",
+                  "children":[
+                     {
+                        "name":"Hospitality",
+                        "external_id":"G04a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Mental Health",
+                        "external_id":"G04a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Personal Services",
+                        "external_id":"G04a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Physical Health",
+                        "external_id":"G04a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Recreation, Leisure and Fitness",
+                        "external_id":"G04a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Veterinarian and Animal Care",
+                        "external_id":"G04a06",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Law, Government and Safety Sub-Category",
+            "external_id":"G05",
+            "children":[
+               {
+                  "name":"Law, Government and Safety",
+                  "external_id":"G05a",
+                  "children":[
+                     {
+                        "name":"Military",
+                        "external_id":"G05a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Law",
+                        "external_id":"G05a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Public Affairs and Government Relations",
+                        "external_id":"G05a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Public Safety and Security",
+                        "external_id":"G05a04",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Logistics, Design and Evaluation Sub-Category",
+            "external_id":"G06",
+            "children":[
+               {
+                  "name":"Logistics, Design and Evaluation",
+                  "external_id":"G06a",
+                  "children":[
+                     {
+                        "name":"Manufacturing, Processing and Production",
+                        "external_id":"G06a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Logistics",
+                        "external_id":"G06a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Performance Measurement",
+                        "external_id":"G06a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Technical Design",
+                        "external_id":"G06a04",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Natural Resources Sub-Category",
+            "external_id":"G07",
+            "children":[
+               {
+                  "name":"Natural Resources",
+                  "external_id":"G07a",
+                  "children":[
+                     {
+                        "name":"Agriculture and Horticulture",
+                        "external_id":"G07a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Forestry",
+                        "external_id":"G07a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Geological Resources",
+                        "external_id":"G07a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Livestock, Farm Animals & Wildlife",
+                        "external_id":"G07a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Water Resources",
+                        "external_id":"G07a05",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Physical Sciences Sub-Category",
+            "external_id":"G08",
+            "children":[
+               {
+                  "name":"Physical Sciences",
+                  "external_id":"G08a",
+                  "children":[
+                     {
+                        "name":"Biology",
+                        "external_id":"G08a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Chemistry",
+                        "external_id":"G08a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Geoscience",
+                        "external_id":"G08a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Physics",
+                        "external_id":"G08a05",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Socioeconomic Systems Sub-Category",
+            "external_id":"G09",
+            "children":[
+               {
+                  "name":"Socioeconomic systems",
+                  "external_id":"G09a",
+                  "children":[
+                     {
+                        "name":"Arts",
+                        "external_id":"G09a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Economics",
+                        "external_id":"G09a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Humanities",
+                        "external_id":"G09a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Library, Conservation, and Heritage",
+                        "external_id":"G09a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Theology and Philosophy",
+                        "external_id":"G09a05",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Technology, Electrical, Material and Mechanical",
+            "external_id":"G10",
+            "children":[
+               {
+                  "name":"The Technology, Electrical, Material and Mechanical",
+                  "external_id":"G10a",
+                  "children":[
+                     {
+                        "name":"Building and Construction",
+                        "external_id":"G10a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Computer, Technology and Information Systems",
+                        "external_id":"G10a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Electrical and Electronics",
+                        "external_id":"G10a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Mechanics and Machinery",
+                        "external_id":"G10a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Telecommunications",
+                        "external_id":"G10a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Vehicle, Machinery and Equipment Operations",
+                        "external_id":"G10a06",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Foundational Knowledge Sub-Category",
+            "external_id":"G11",
+            "children":[
+               {
+                  "name":"Foundational Knowledge",
+                  "external_id":"G11a",
+                  "children":[
+                     {
+                        "name":"Languages",
+                        "external_id":"G11a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Mathematics",
+                        "external_id":"G11a02",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   },
+   {
+      "name":"Work Context",
+      "external_id":"J",
+      "children":[
+         {
+            "name":"Structural Job Characteristics",
+            "external_id":"J01",
+            "children":[
+               {
+                  "name":"Criticality of Position",
+                  "external_id":"J01a",
+                  "children":[
+                     {
+                        "name":"Consequence of Error",
+                        "external_id":"J01a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Freedom to Make Decisions",
+                        "external_id":"J01a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Frequency of Decision Making",
+                        "external_id":"J01a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Impact of Decisions",
+                        "external_id":"J01a04",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Various Challenge Types",
+                  "external_id":"J01b",
+                  "children":[
+                     {
+                        "name":"Automation",
+                        "external_id":"J01b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Precision",
+                        "external_id":"J01b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Structured versus Unstructured Work",
+                        "external_id":"J01b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Tasks Repetition",
+                        "external_id":"J01b04",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Pace and Scheduling",
+                  "external_id":"J01c",
+                  "children":[
+                     {
+                        "name":"Pace Determined by Speed of Equipment",
+                        "external_id":"J01c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Time Pressure",
+                        "external_id":"J01c02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Type of Work Schedules",
+                        "external_id":"J01c03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Work Week Duration",
+                        "external_id":"J01c04",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Level of Competition",
+                  "external_id":"J01d",
+                  "children":[
+                     {
+                        "name":"Competition",
+                        "external_id":"J01d01",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Physical Work Environment",
+            "external_id":"J02",
+            "children":[
+               {
+                  "name":"Exposure to Job Hazards",
+                  "external_id":"J02a",
+                  "children":[
+                     {
+                        "name":"Dangerous Locations",
+                        "external_id":"J02a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Fire, Steam, Hot Surfaces",
+                        "external_id":"J02a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Flying Particles, Falling Objects",
+                        "external_id":"J02a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Hazardous Conditions",
+                        "external_id":"J02a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Hazardous Equipment, Machinery, Tools",
+                        "external_id":"J02a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"High Places",
+                        "external_id":"J02a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Radiation",
+                        "external_id":"J02a07",
+                        "children":[]
+                     },
+                     {
+                        "name":"Cramped Work Space, Awkward Positions",
+                        "external_id":"J02a08",
+                        "children":[]
+                     },
+                     {
+                        "name":"Skin Injury",
+                        "external_id":"J02a09",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Work Setting",
+                  "external_id":"J02b",
+                  "children":[
+                     {
+                        "name":"In an Enclosed Vehicle or Equipment",
+                        "external_id":"J02b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"In an Open Vehicle or Equipment",
+                        "external_id":"J02b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Indoors, Environmentally Controlled",
+                        "external_id":"J02b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Indoors, Not Environmentally Controlled",
+                        "external_id":"J02b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Outside, Exposed to Weather",
+                        "external_id":"J02b05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Outside, Under Cover",
+                        "external_id":"J02b06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Physical Proximity",
+                        "external_id":"J02b07",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Environmental Conditions",
+                  "external_id":"J02c",
+                  "children":[
+                     {
+                        "name":"Biological Agents",
+                        "external_id":"J02c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Dangerous Chemical Substances",
+                        "external_id":"J02c02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Vibration",
+                        "external_id":"J02c03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Sound and Noise",
+                        "external_id":"J02c04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Extremely Bright or Inadequate Lighting",
+                        "external_id":"J02c05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Extreme Temperatures",
+                        "external_id":"J02c06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Odours",
+                        "external_id":"J02c07",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Safety Equipment Required",
+                  "external_id":"J02d",
+                  "children":[
+                     {
+                        "name":"Specialized Safety Equipment",
+                        "external_id":"J02d01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Standard Safety Equipment",
+                        "external_id":"J02d02",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Physical Demands",
+            "external_id":"J03",
+            "children":[
+               {
+                  "name":"Body Positioning",
+                  "external_id":"J03a",
+                  "children":[
+                     {
+                        "name":"Bending or Twisting the Body",
+                        "external_id":"J03a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Climbing",
+                        "external_id":"J03a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Crawling",
+                        "external_id":"J03a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Crouching",
+                        "external_id":"J03a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Handling Material Manually",
+                        "external_id":"J03a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Keeping or Regaining Balance",
+                        "external_id":"J03a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Kneeling",
+                        "external_id":"J03a07",
+                        "children":[]
+                     },
+                     {
+                        "name":"Making Repetitive Motions",
+                        "external_id":"J03a08",
+                        "children":[]
+                     },
+                     {
+                        "name":"Sitting",
+                        "external_id":"J03a09",
+                        "children":[]
+                     },
+                     {
+                        "name":"Standing",
+                        "external_id":"J03a10",
+                        "children":[]
+                     },
+                     {
+                        "name":"Walking and Running",
+                        "external_id":"J03a11",
+                        "children":[]
+                     },
+                     {
+                        "name":"Reaching",
+                        "external_id":"J03a12",
+                        "children":[]
+                     },
+                     {
+                        "name":"Stooping",
+                        "external_id":"J03a13",
+                        "children":[]
+                     },
+                     {
+                        "name":"Keyboarding",
+                        "external_id":"J03a14",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Body Exertion",
+                  "external_id":"J03b",
+                  "children":[
+                     {
+                        "name":"Carrying",
+                        "external_id":"J03b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Lifting",
+                        "external_id":"J03b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Pulling",
+                        "external_id":"J03b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Pushing",
+                        "external_id":"J03b04",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Speaking and Seeing",
+                  "external_id":"J03c",
+                  "children":[
+                     {
+                        "name":"Speaking",
+                        "external_id":"J03c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Visual Acuity",
+                        "external_id":"J03c02",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Interpersonal Relations",
+            "external_id":"J04",
+            "children":[
+               {
+                  "name":"Job interactions",
+                  "external_id":"J04a",
+                  "children":[
+                     {
+                        "name":"Conflict Situations",
+                        "external_id":"J04a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Contact with Others",
+                        "external_id":"J04a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Coordinating or Leading Others",
+                        "external_id":"J04a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Deal With External Customers",
+                        "external_id":"J04a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Work with Work Group or Team",
+                        "external_id":"J04a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Deal with Physically Aggressive People",
+                        "external_id":"J04a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Dealing With Unpleasant or Angry People",
+                        "external_id":"J04a07",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Communication Methods",
+                  "external_id":"J04b",
+                  "children":[
+                     {
+                        "name":"Electronic Mail",
+                        "external_id":"J04b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Face-to-Face Discussions",
+                        "external_id":"J04b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Written Communications",
+                        "external_id":"J04b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Public Speaking",
+                        "external_id":"J04b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Telephone",
+                        "external_id":"J04b05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Videoconference",
+                        "external_id":"J04b06",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Interpersonal Responsibilities",
+                  "external_id":"J04c",
+                  "children":[
+                     {
+                        "name":"Responsibility for Outcomes and Results of Other Workers",
+                        "external_id":"J04c01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Responsible for Others' Health and Safety",
+                        "external_id":"J04c02",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   },
+   {
+      "name":"Work Activities",
+      "external_id":"K",
+      "children":[
+         {
+            "name":"Information-Oriented Activities",
+            "external_id":"K01",
+            "children":[
+               {
+                  "name":"Looking for and Receiving Job-Related Information",
+                  "external_id":"K01a",
+                  "children":[
+                     {
+                        "name":"Getting Information",
+                        "external_id":"K01a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Monitoring Processes, Materials, or Surroundings",
+                        "external_id":"K01a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Document Use",
+                        "external_id":"K01a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Information Synthesis",
+                        "external_id":"K01a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Comparing",
+                        "external_id":"K01a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Analyzing Data or Information",
+                        "external_id":"K01a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Developing Technical Instructions",
+                        "external_id":"K01a07",
+                        "children":[]
+                     },
+                     {
+                        "name":"Clerical Activities",
+                        "external_id":"K01a08",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Identify and Evaluating Job-Relevant Information",
+                  "external_id":"K01b",
+                  "children":[
+                     {
+                        "name":"Identifying Objects, Actions, and Events",
+                        "external_id":"K01b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Estimating the Quantifiable Characteristics",
+                        "external_id":"K01b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Inspecting Equipment, Structures, or Material",
+                        "external_id":"K01b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Processing Information",
+                        "external_id":"K01b04",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Physically-Oriented Activities",
+            "external_id":"K02",
+            "children":[
+               {
+                  "name":"Performing Physical and Manual Work Activities",
+                  "external_id":"K02a",
+                  "children":[
+                     {
+                        "name":"Handling and Moving Objects",
+                        "external_id":"K02a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Operating Vehicles, Mechanized Devices, or Equipment",
+                        "external_id":"K02a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Constructing",
+                        "external_id":"K02a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Controlling Machines and Processes",
+                        "external_id":"K02a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Manipulating - Operating",
+                        "external_id":"K02a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Sorting",
+                        "external_id":"K02a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Catering",
+                        "external_id":"K02a07",
+                        "children":[]
+                     },
+                     {
+                        "name":"Performing Janitorial Services",
+                        "external_id":"K02a08",
+                        "children":[]
+                     },
+                     {
+                        "name":"Performing General Physical Activities",
+                        "external_id":"K02a09",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Performing Complex and Technical Activities",
+                  "external_id":"K02b",
+                  "children":[
+                     {
+                        "name":"Debugging and Reprogramming",
+                        "external_id":"K02b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Artistic Designing",
+                        "external_id":"K02b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Electronic Maintenance",
+                        "external_id":"K02b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Interacting with Computers",
+                        "external_id":"K02b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Mechanical Maintenance",
+                        "external_id":"K02b05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Writing or Composing",
+                        "external_id":"K02b06",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"Mental Process-Oriented Activities",
+            "external_id":"K03",
+            "children":[
+               {
+                  "name":"Information and Data Processing",
+                  "external_id":"K03a",
+                  "children":[
+                     {
+                        "name":"Judging Quality",
+                        "external_id":"K03a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Evaluating Information to Determine Compliance",
+                        "external_id":"K03a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Calculating",
+                        "external_id":"K03a03",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Reasoning and Decision Making",
+                  "external_id":"K03b",
+                  "children":[
+                     {
+                        "name":"Making Decisions",
+                        "external_id":"K03b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Thinking Creatively",
+                        "external_id":"K03b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Developing Objectives and Strategies",
+                        "external_id":"K03b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Applying New Knowledge",
+                        "external_id":"K03b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Examining and Diagnosing",
+                        "external_id":"K03b05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Managing Resources",
+                        "external_id":"K03b06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Planning and Organizing",
+                        "external_id":"K03b07",
+                        "children":[]
+                     },
+                     {
+                        "name":"Scheduling Work and Activities",
+                        "external_id":"K03b08",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "name":"People-Oriented Activities",
+            "external_id":"K04",
+            "children":[
+               {
+                  "name":"Communicating and Interacting",
+                  "external_id":"K04a",
+                  "children":[
+                     {
+                        "name":"Communicating with Coworkers",
+                        "external_id":"K04a01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Coordinating the Work and Activities of Others",
+                        "external_id":"K04a02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Facilitating Group Discussion",
+                        "external_id":"K04a03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Interpreting the Meaning of Information for Others",
+                        "external_id":"K04a04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Protecting and Enforcing",
+                        "external_id":"K04a05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Communicating with Persons Outside Organization",
+                        "external_id":"K04a06",
+                        "children":[]
+                     },
+                     {
+                        "name":"Establishing and Maintaining Interpersonal Relationships",
+                        "external_id":"K04a07",
+                        "children":[]
+                     },
+                     {
+                        "name":"Selling or Influencing Others",
+                        "external_id":"K04a08",
+                        "children":[]
+                     },
+                     {
+                        "name":"Performing for or Working Directly with the Public",
+                        "external_id":"K04a09",
+                        "children":[]
+                     },
+                     {
+                        "name":"Interviewing",
+                        "external_id":"K04a11",
+                        "children":[]
+                     },
+                     {
+                        "name":"Assisting and Caring for Others",
+                        "external_id":"K04a12",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Coordinating, Developing, Managing, and Advising",
+                  "external_id":"K04b",
+                  "children":[
+                     {
+                        "name":"Coaching and Developing Others",
+                        "external_id":"K04b01",
+                        "children":[]
+                     },
+                     {
+                        "name":"Providing Consultation and Advice",
+                        "external_id":"K04b02",
+                        "children":[]
+                     },
+                     {
+                        "name":"Resolving Conflicts and Negotiating with Others",
+                        "external_id":"K04b03",
+                        "children":[]
+                     },
+                     {
+                        "name":"Supervising Subordinates",
+                        "external_id":"K04b04",
+                        "children":[]
+                     },
+                     {
+                        "name":"Team Building",
+                        "external_id":"K04b05",
+                        "children":[]
+                     },
+                     {
+                        "name":"Training and Teaching",
+                        "external_id":"K04b06",
+                        "children":[]
+                     }
+                  ]
+               },
+               {
+                  "name":"Performing Administrative Activities",
+                  "external_id":"K04c",
+                  "children":[
+                     {
+                        "name":"Staffing",
+                        "external_id":"K04c01",
+                        "children":[]
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   }
+]
