@@ -21,21 +21,20 @@ Running this script will do the following:
 
 ### Getting Started
 
-1. To begin, clone this repo inside the `/edx/src/` directory so it can be accessed from within the dev stack
-1. (Optional) If you would like to include taxonomy data from real world examples, such as:
+1. To begin, clone this repo inside a directory so it can be accessed from within the devstack (eg: `/edx/src/`)
+1. Set the `TAXONOMY_SAMPLE_PATH` variable inside the `generate.py` file to point to the cloned repo inside your devstack/tutor environment, eg: `/edx/src/taxonomy-sample-data`
+1. (Optional) If you would not like to include taxonomy data from real world examples, such as:
     - [Open Canada Taxonomy](https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c/resource/0a120b15-9708-4d8a-8af2-2431c4540c0b)
     - [LightCast Skills Taxonomy](https://docs.google.com/spreadsheets/d/1DA3JfpBE5Krc0daImuu5Y0nsH93PEfdrWRrEa-sR-6k/edit#gid=1319222368)
 
-    Then set the following flags to `True` in `generate.py` accordingly:
+    Then set the following flags to `False` in `generate.py` accordingly:
 
     ```py
-    IMPORT_OPEN_CANADA_TAXONOMY = False
-    IMPORT_LIGHTCAST_SKILLS_TAXONOMY = False
+    IMPORT_OPEN_CANADA_TAXONOMY = True
+    IMPORT_LIGHTCAST_SKILLS_TAXONOMY = True
     ```
 
-1. To run the script, enter the LMS shell (`make lms-shell`), make sure this repo is present in the `/edx/src/` and run the following command:
-
-
-```sh
-source /edx/app/edxapp/edxapp_env && python /edx/app/edxapp/edx-platform/manage.py cms shell < /edx/src/taxonomy-sample-data/generate.py
-```
+1. To run the script, enter the LMS shell (`make lms-shell`) and run the following command:
+    ```sh
+    python manage.py cms shell < /path/to/taxonomy-sample-data/generate.py
+    ```

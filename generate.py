@@ -205,7 +205,13 @@ USER_EMAIL = "edx@example.com"
 
 user = User.objects.get(email=USER_EMAIL)
 
-TARFILE_PATH = '/edx/src/taxonomy-sample-data/course.g4vmy6n2.tar.gz'
+# Set to path where repo was cloned, eg: /edx/src/taxonomy-sample-data
+TAXONOMY_SAMPLE_PATH = None
+
+if TAXONOMY_SAMPLE_PATH is None:
+    raise Exception("`TAXONOMY_SAMPLE_PATH` not set. Please set it in generate.py")
+
+TARFILE_PATH = f"{TAXONOMY_SAMPLE_PATH}/course.g4vmy6n2.tar.gz"
 
 SAMPLE_ORGS_COUNT = 2
 SAMPLE_ORG_NAME = "SampleTaxonomyOrg"
@@ -219,8 +225,8 @@ HIERARCHICAL_TAXONOMY_NAME = "HierarchicalTaxonomy"
 TWO_LEVEL_TAXONOMY_NAME = "TwoLevelTaxonomy"
 MULTI_ORG_TAXONOMY_NAME = "MultiOrgTaxonomy"
 
-IMPORT_OPEN_CANADA_TAXONOMY = False
-IMPORT_LIGHTCAST_SKILLS_TAXONOMY = False
+IMPORT_OPEN_CANADA_TAXONOMY = True
+IMPORT_LIGHTCAST_SKILLS_TAXONOMY = True
 
 
 def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
@@ -521,7 +527,7 @@ for org in sample_orgs:
 
     if IMPORT_OPEN_CANADA_TAXONOMY:
         OPEN_CANADA_TAXONOMY_NAME = "OpenCanadaTaxonomy"
-        OPEN_CANADA_TAXONOMY_PATH = "/edx/src/taxonomy-sample-data/sample_data/open_canada_taxonomy.json"
+        OPEN_CANADA_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/open_canada_taxonomy.json"
 
         # Retrieve/Create Open Canada Taxonomy:
         # https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c/resource/0a120b15-9708-4d8a-8af2-2431c4540c0b
@@ -547,7 +553,7 @@ for org in sample_orgs:
 
     if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
         LIGHTCAST_SKILLS_TAXONOMY_NAME = "LightCastSkillsTaxonomy"
-        LIGHTCAST_SKILLS_TAXONOMY_PATH = "/edx/src/taxonomy-sample-data/sample_data/lightcast_taxonomy.json"
+        LIGHTCAST_SKILLS_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/lightcast_taxonomy.json"
 
         # Retrieve/Create LightCast Skills Taxonomy:
         # https://docs.google.com/spreadsheets/d/1DA3JfpBE5Krc0daImuu5Y0nsH93PEfdrWRrEa-sR-6k/edit#gid=1319222368
