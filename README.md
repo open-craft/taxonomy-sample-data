@@ -23,6 +23,7 @@ Running this script will do the following:
 
 1. To begin, clone this repo inside a directory so it can be accessed from within the devstack (eg: `/edx/src/`)
 1. Set the `TAXONOMY_SAMPLE_PATH` variable inside the `generate.py` file to point to the cloned repo inside your devstack/tutor environment, eg: `/edx/src/taxonomy-sample-data`
+1. Set the `USER_EMAIL` variable in `generate.py` to the user the courses/units will be created under. It defaults to `edx@example.com`.
 1. (Optional) If you would not like to include taxonomy data from real world examples, such as:
     - [Open Canada Taxonomy](https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c/resource/0a120b15-9708-4d8a-8af2-2431c4540c0b)
     - [LightCast Skills Taxonomy](https://docs.google.com/spreadsheets/d/1DA3JfpBE5Krc0daImuu5Y0nsH93PEfdrWRrEa-sR-6k/edit#gid=1319222368)
@@ -38,3 +39,9 @@ Running this script will do the following:
     ```sh
     python manage.py cms shell < /path/to/taxonomy-sample-data/generate.py
     ```
+
+### License Information
+
+This includes a copy of the "[Skills and Competencies Taxonomy Data](https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c)" from Employment and Social Development Canada, which is under the [Open Government Licence - Canada](https://open.canada.ca/en/open-government-licence-canada).
+
+This includes a copy of the [Lightcast Open Skills Taxonomy](https://lightcast.io/open-skills), which is "free for individual and not-for-profit use" and is available under the [Lightcast Open Skills Terms of Use](https://lightcast.io/downloads/lightcast-open-skills-license-agreement.pdf).
