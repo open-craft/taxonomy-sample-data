@@ -245,7 +245,12 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
             taxonomy = Taxonomy.objects.get(name=name, enabled=enabled).cast()
         else:
             taxonomy = org_taxonomies.get(name=name, enabled=enabled).cast()
-    except Taxonomy.DoesNotExist:
+    except (Taxonomy.DoesNotExist, Taxonomy.MultipleObjectsReturned) as e:
+        if isinstance(e, Taxonomy.MultipleObjectsReturned):
+            # If for some reason there are multiple matching taxonomies,
+            # delete and start from scratch
+            Taxonomy.objects.filter(name=name, enabled=enabled).delete()
+
         taxonomy = create_taxonomy(name=name, enabled=enabled)
         set_taxonomy_orgs(taxonomy, orgs=orgs)
 
@@ -417,7 +422,64 @@ logger.info(f"Creating fresh Tags for {multi_org_taxonomy}")
 multi_org_taxonomy_tags = create_tags_for_multi_org_taxonomy(multi_org_taxonomy)
 
 
+if IMPORT_OPEN_CANADA_TAXONOMY:
+    OPEN_CANADA_TAXONOMY_NAME = "OpenCanadaTaxonomy"
+    OPEN_CANADA_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/open_canada_taxonomy.json"
+
+    # Retrieve/Create Open Canada Taxonomy:
+    # https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c/resource/0a120b15-9708-4d8a-8af2-2431c4540c0b
+    # It has four levels (Category > Sub-Category > Similarity Group > Descriptor
+    logger.info(f"Creating or retrieving {OPEN_CANADA_TAXONOMY_NAME}")
+    open_canada_taxonomy = get_or_create_taxonomy(
+        None, OPEN_CANADA_TAXONOMY_NAME, sample_orgs, enabled=True
+    )
+
+    # Clear any existing Tags for open_canada_taxonomy and create fresh ones
+    open_canada_taxonomy_tags = open_canada_taxonomy.get_tags()
+    logger.info(
+        f"Clearing existing {len(open_canada_taxonomy_tags)} Tags for {open_canada_taxonomy}"
+    )
+    for tag in tqdm.tqdm(open_canada_taxonomy_tags):
+        tag.delete()
+
+    logger.info(f"Creating fresh Tags for {open_canada_taxonomy}")
+
+    create_tags_from_json(open_canada_taxonomy, OPEN_CANADA_TAXONOMY_PATH)
+
+
+if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
+    LIGHTCAST_SKILLS_TAXONOMY_NAME = "LightCastSkillsTaxonomy"
+    LIGHTCAST_SKILLS_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/lightcast_taxonomy.json"
+
+    # Retrieve/Create LightCast Skills Taxonomy:
+    # https://docs.google.com/spreadsheets/d/1DA3JfpBE5Krc0daImuu5Y0nsH93PEfdrWRrEa-sR-6k/edit#gid=1319222368
+    # It has three levels (Category > Sub-Category > Skill
+    logger.info(f"Creating or retrieving {LIGHTCAST_SKILLS_TAXONOMY_NAME}")
+    lightcast_skills_taxonomy = get_or_create_taxonomy(
+        None, LIGHTCAST_SKILLS_TAXONOMY_NAME, sample_orgs, enabled=True
+    )
+
+    # Clear any existing Tags for lightcast_skills_taxonomy and create fresh ones
+    lightcast_skills_taxonomy_tags = lightcast_skills_taxonomy.get_tags()
+    logger.info(
+        f"Clearing existing {len(lightcast_skills_taxonomy_tags)} Tags for {lightcast_skills_taxonomy}"
+    )
+    for tag in tqdm.tqdm(lightcast_skills_taxonomy_tags):
+        tag.delete()
+
+    logger.info(f"Creating fresh Tags for {lightcast_skills_taxonomy}")
+
+    create_tags_from_json(lightcast_skills_taxonomy, LIGHTCAST_SKILLS_TAXONOMY_PATH)
+
+
 for org in sample_orgs:
+    generated_taxonomies = [multi_org_taxonomy]
+
+    if IMPORT_OPEN_CANADA_TAXONOMY:
+        generated_taxonomies.append(open_canada_taxonomy)
+
+    if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
+        generated_taxonomies.append(lightcast_skills_taxonomy)
 
     # Retrieve/create Sample Taxonomy Course in org
     logger.info(
@@ -520,62 +582,10 @@ for org in sample_orgs:
     logger.info(f"Creating fresh Tags for {two_level_taxonomy}")
     create_tags_for_two_level_taxonomy(two_level_taxonomy)
 
-    generated_taxonomies = [
+    generated_taxonomies += [
         disabled_taxonomy, flat_taxonomy,
         hierarchical_taxonomy, two_level_taxonomy
     ]
-
-    if IMPORT_OPEN_CANADA_TAXONOMY:
-        OPEN_CANADA_TAXONOMY_NAME = "OpenCanadaTaxonomy"
-        OPEN_CANADA_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/open_canada_taxonomy.json"
-
-        # Retrieve/Create Open Canada Taxonomy:
-        # https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c/resource/0a120b15-9708-4d8a-8af2-2431c4540c0b
-        # It has four levels (Category > Sub-Category > Similarity Group > Descriptor
-        logger.info(f"Creating or retrieving {OPEN_CANADA_TAXONOMY_NAME}")
-        open_canada_taxonomy = get_or_create_taxonomy(
-            org_taxonomies, OPEN_CANADA_TAXONOMY_NAME, [org], enabled=True
-        )
-
-        # Clear any existing Tags for open_canada_taxonomy and create fresh ones
-        open_canada_taxonomy_tags = open_canada_taxonomy.get_tags()
-        logger.info(
-            f"Clearing existing {len(open_canada_taxonomy_tags)} Tags for {open_canada_taxonomy}"
-        )
-        for tag in tqdm.tqdm(open_canada_taxonomy_tags):
-            tag.delete()
-
-        logger.info(f"Creating fresh Tags for {open_canada_taxonomy}")
-
-        create_tags_from_json(open_canada_taxonomy, OPEN_CANADA_TAXONOMY_PATH)
-
-        generated_taxonomies.append(open_canada_taxonomy)
-
-    if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
-        LIGHTCAST_SKILLS_TAXONOMY_NAME = "LightCastSkillsTaxonomy"
-        LIGHTCAST_SKILLS_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/lightcast_taxonomy.json"
-
-        # Retrieve/Create LightCast Skills Taxonomy:
-        # https://docs.google.com/spreadsheets/d/1DA3JfpBE5Krc0daImuu5Y0nsH93PEfdrWRrEa-sR-6k/edit#gid=1319222368
-        # It has three levels (Category > Sub-Category > Skill
-        logger.info(f"Creating or retrieving {LIGHTCAST_SKILLS_TAXONOMY_NAME}")
-        lightcast_skills_taxonomy = get_or_create_taxonomy(
-            org_taxonomies, LIGHTCAST_SKILLS_TAXONOMY_NAME, [org], enabled=True
-        )
-
-        # Clear any existing Tags for lightcast_skills_taxonomy and create fresh ones
-        lightcast_skills_taxonomy_tags = lightcast_skills_taxonomy.get_tags()
-        logger.info(
-            f"Clearing existing {len(lightcast_skills_taxonomy_tags)} Tags for {lightcast_skills_taxonomy}"
-        )
-        for tag in tqdm.tqdm(lightcast_skills_taxonomy_tags):
-            tag.delete()
-
-        logger.info(f"Creating fresh Tags for {lightcast_skills_taxonomy}")
-
-        create_tags_from_json(lightcast_skills_taxonomy, LIGHTCAST_SKILLS_TAXONOMY_PATH)
-
-        generated_taxonomies.append(lightcast_skills_taxonomy)
 
     # Tagging Courses and Components
 
