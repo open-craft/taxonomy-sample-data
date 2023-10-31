@@ -601,6 +601,12 @@ for org in sample_orgs:
     for section in get_sections(sample_taxonomy_course):
         for subsection in get_subsections(section):
             for unit in get_units(subsection):
+                # Tag units
+                logger.info(f"Tagging {unit.location}")
+                tagify_object(
+                    unit.location,
+                    generated_taxonomies
+                )
                 for child in unit.get_children():
                     logger.info(f"Tagging {child.location}")
                     tagify_object(
