@@ -36,10 +36,11 @@ from xmodule.contentstore.django import contentstore
 
 from openedx_tagging.core.tagging.models import Tag, Taxonomy
 
+from openedx_tagging.core.tagging.api import delete_tags_from_taxonomy, get_children_tags
 from openedx.core.djangoapps.content_tagging.api import (
     create_taxonomy, get_taxonomies_for_org,
     set_taxonomy_orgs, tag_content_object, get_content_tags,
-    resync_object_tags
+    resync_object_tags, get_tags
 )
 
 from openedx.core.djangoapps.discussions.tasks import (
@@ -383,9 +384,13 @@ def tagify_object(object_id, taxonomies):
         taxonomies: list of taxonomies of tags to tag object with
     """
     for taxonomy in taxonomies:
-        tag = taxonomy.get_tags()[0]
+        leaf_tag = None
+        tags = get_tags(taxonomy)
+        while len(tags) > 0:
+            leaf_tag = tags[0]
+            tags = get_children_tags(taxonomy, leaf_tag["value"])
         try:
-            tag_content_object(object_id, taxonomy, [tag.value])
+            tag_content_object(object_id, taxonomy, [leaf_tag["value"]])
         except IntegrityError:
             # content tag value already exists, we need to resync with
             # new tag instance
@@ -413,10 +418,13 @@ multi_org_taxonomy = get_or_create_taxonomy(
 )
 
 # Clear any existing Tags for hierarchical_taxonomy and create fresh ones
-multi_org_taxonomy_tags = multi_org_taxonomy.get_tags()
+multi_org_taxonomy_tags = get_tags(multi_org_taxonomy)
 logger.info(f"Clearing existing {len(multi_org_taxonomy_tags)} Tags for {multi_org_taxonomy}")
-for tag in tqdm.tqdm(multi_org_taxonomy_tags):
-    tag.delete()
+delete_tags_from_taxonomy(
+    multi_org_taxonomy,
+    list(map(lambda t: t["value"], multi_org_taxonomy_tags)),
+    with_subtags=True
+)
 
 logger.info(f"Creating fresh Tags for {multi_org_taxonomy}")
 multi_org_taxonomy_tags = create_tags_for_multi_org_taxonomy(multi_org_taxonomy)
@@ -435,12 +443,15 @@ if IMPORT_OPEN_CANADA_TAXONOMY:
     )
 
     # Clear any existing Tags for open_canada_taxonomy and create fresh ones
-    open_canada_taxonomy_tags = open_canada_taxonomy.get_tags()
+    open_canada_taxonomy_tags = get_tags(open_canada_taxonomy)
     logger.info(
         f"Clearing existing {len(open_canada_taxonomy_tags)} Tags for {open_canada_taxonomy}"
     )
-    for tag in tqdm.tqdm(open_canada_taxonomy_tags):
-        tag.delete()
+    delete_tags_from_taxonomy(
+        open_canada_taxonomy,
+        list(map(lambda t: t["value"], open_canada_taxonomy_tags)),
+        with_subtags=True
+    )
 
     logger.info(f"Creating fresh Tags for {open_canada_taxonomy}")
 
@@ -460,12 +471,15 @@ if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
     )
 
     # Clear any existing Tags for lightcast_skills_taxonomy and create fresh ones
-    lightcast_skills_taxonomy_tags = lightcast_skills_taxonomy.get_tags()
+    lightcast_skills_taxonomy_tags = get_tags(lightcast_skills_taxonomy)
     logger.info(
         f"Clearing existing {len(lightcast_skills_taxonomy_tags)} Tags for {lightcast_skills_taxonomy}"
     )
-    for tag in tqdm.tqdm(lightcast_skills_taxonomy_tags):
-        tag.delete()
+    delete_tags_from_taxonomy(
+        lightcast_skills_taxonomy,
+        list(map(lambda t: t["value"], lightcast_skills_taxonomy_tags)),
+        lightcast_skills_taxonomy_tags
+    )
 
     logger.info(f"Creating fresh Tags for {lightcast_skills_taxonomy}")
 
@@ -521,12 +535,15 @@ for org in sample_orgs:
     )
 
     # Clear any existing Tags for disabled_taxonomy and create fresh ones
-    disabled_taxonomy_tags = disabled_taxonomy.get_tags()
+    disabled_taxonomy_tags = get_tags(disabled_taxonomy)
     logger.info(
         f"Clearing existing {len(disabled_taxonomy_tags)} Tags for {disabled_taxonomy}"
     )
-    for tag in tqdm.tqdm(disabled_taxonomy_tags):
-        tag.delete()
+    delete_tags_from_taxonomy(
+        disabled_taxonomy,
+        list(map(lambda t: t["value"], disabled_taxonomy_tags)),
+        with_subtags=True
+    )
 
     logger.info(f"Creating fresh Tags for {disabled_taxonomy}")
     create_tags_for_disabled_taxonomy(disabled_taxonomy)
@@ -538,10 +555,13 @@ for org in sample_orgs:
     )
 
     # Clear any existing Tags for flat_taxonomy and create fresh ones
-    flat_taxonomy_tags = flat_taxonomy.get_tags()
+    flat_taxonomy_tags = get_tags(flat_taxonomy)
     logger.info(f"Clearing existing {len(flat_taxonomy_tags)} Tags for {flat_taxonomy}")
-    for tag in tqdm.tqdm(flat_taxonomy_tags):
-        tag.delete()
+    delete_tags_from_taxonomy(
+        flat_taxonomy,
+        list(map(lambda t: t["value"], flat_taxonomy_tags)),
+        with_subtags=True
+    )
 
     logger.info(f"Creating fresh Tags for {flat_taxonomy}")
     create_tags_for_flat_taxonomy(flat_taxonomy)
@@ -555,12 +575,15 @@ for org in sample_orgs:
     )
 
     # Clear any existing Tags for hierarchical_taxonomy and create fresh ones
-    hierarchical_taxonomy_tags = hierarchical_taxonomy.get_tags()
+    hierarchical_taxonomy_tags = get_tags(hierarchical_taxonomy)
     logger.info(
         f"Clearing existing {len(hierarchical_taxonomy_tags)} Tags for {hierarchical_taxonomy}"
     )
-    for tag in tqdm.tqdm(hierarchical_taxonomy_tags):
-        tag.delete()
+    delete_tags_from_taxonomy(
+        hierarchical_taxonomy,
+        list(map(lambda t: t["value"], hierarchical_taxonomy_tags)),
+        with_subtags=True
+    )
 
     logger.info(f"Creating fresh Tags for {hierarchical_taxonomy}")
     create_tags_for_hierarchical_taxonomy(hierarchical_taxonomy)
@@ -572,12 +595,15 @@ for org in sample_orgs:
     )
 
     # Clear any existing tags for two_level_taxonomy and create fresh ones
-    two_level_taxonomy_tags = two_level_taxonomy.get_tags()
+    two_level_taxonomy_tags = get_tags(two_level_taxonomy)
     logger.info(
         f"Clearing existing {len(two_level_taxonomy_tags)} Tags for {two_level_taxonomy}"
     )
-    for tag in tqdm.tqdm(two_level_taxonomy_tags):
-        tag.delete()
+    delete_tags_from_taxonomy(
+        two_level_taxonomy,
+        list(map(lambda t: t["value"], two_level_taxonomy_tags)),
+        two_level_taxonomy_tags
+    )
 
     logger.info(f"Creating fresh Tags for {two_level_taxonomy}")
     create_tags_for_two_level_taxonomy(two_level_taxonomy)
