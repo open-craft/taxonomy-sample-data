@@ -5,10 +5,10 @@ import pkg_resources
 import shutil
 import tarfile
 import logging
-import tqdm
 import json
 
 from path import Path as path
+from random import randint
 from olxcleaner.exceptions import ErrorLevel
 
 from django.conf import settings
@@ -246,14 +246,20 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
             taxonomy = Taxonomy.objects.get(name=name, enabled=enabled).cast()
         else:
             taxonomy = org_taxonomies.get(name=name, enabled=enabled).cast()
+        # Previous versions of this script and the platform didn't set allow_multiple=True, but we almost never want
+        # allow_multiple=False.
+        if not taxonomy.allow_multiple:
+            taxonomy.allow_multiple = True
+            taxonomy.save()
     except (Taxonomy.DoesNotExist, Taxonomy.MultipleObjectsReturned) as e:
         if isinstance(e, Taxonomy.MultipleObjectsReturned):
             # If for some reason there are multiple matching taxonomies,
             # delete and start from scratch
             Taxonomy.objects.filter(name=name, enabled=enabled).delete()
 
-        taxonomy = create_taxonomy(name=name, enabled=enabled)
-        set_taxonomy_orgs(taxonomy, orgs=orgs)
+        taxonomy = create_taxonomy(name=name, orgs=orgs, enabled=enabled, allow_multiple=True)
+        if org_taxonomies is None:
+            set_taxonomy_orgs(taxonomy, all_orgs=True)
 
     return taxonomy
 
@@ -384,13 +390,27 @@ def tagify_object(object_id, taxonomies):
         taxonomies: list of taxonomies of tags to tag object with
     """
     for taxonomy in taxonomies:
-        leaf_tag = None
         tags = get_tags(taxonomy)
-        while len(tags) > 0:
-            leaf_tag = tags[0]
-            tags = get_children_tags(taxonomy, leaf_tag["value"])
+        total_tags = len(tags)
+        tag_values = []
+        num_tags = randint(0, 3)  # Sometimes we don't apply any tags, sometimes up to 3
+        for _i in range(num_tags):
+            random_tag = tags[randint(0, total_tags - 1)]
+            second_tag = None
+            # Alway select leaf tags:
+            while random_tag["child_count"] > 0:
+                random_tag = get_children_tags(taxonomy, random_tag["value"])[0]
+                # Sometimes, select a second leaf tag at the same depth.
+                # But only if there happens to be at least 4 tags in this branch of the tree.
+                try:
+                    second_tag = get_children_tags(taxonomy, random_tag["value"])[3]
+                except IndexError:
+                    pass
+            tag_values.append(random_tag["value"])
+            if second_tag:
+                tag_values.append(second_tag["value"])
         try:
-            tag_content_object(object_id, taxonomy, [leaf_tag["value"]])
+            tag_content_object(object_id, taxonomy, tag_values)
         except IntegrityError:
             # content tag value already exists, we need to resync with
             # new tag instance
@@ -459,15 +479,18 @@ if IMPORT_OPEN_CANADA_TAXONOMY:
 
 
 if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
-    LIGHTCAST_SKILLS_TAXONOMY_NAME = "LightCastSkillsTaxonomy"
+    LIGHTCAST_SKILLS_TAXONOMY_NAME = "Lightcast Open Skills Taxonomy"
     LIGHTCAST_SKILLS_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/lightcast_taxonomy.json"
 
-    # Retrieve/Create LightCast Skills Taxonomy:
+    # Delete the old version of this taxonomy with the previous name:
+    Taxonomy.objects.filter(name="LightCastSkillsTaxonomy").delete()
+
+    # Retrieve/Create Lightcast Open Skills Taxonomy:
     # https://docs.google.com/spreadsheets/d/1DA3JfpBE5Krc0daImuu5Y0nsH93PEfdrWRrEa-sR-6k/edit#gid=1319222368
     # It has three levels (Category > Sub-Category > Skill
     logger.info(f"Creating or retrieving {LIGHTCAST_SKILLS_TAXONOMY_NAME}")
     lightcast_skills_taxonomy = get_or_create_taxonomy(
-        None, LIGHTCAST_SKILLS_TAXONOMY_NAME, sample_orgs, enabled=True
+        None, LIGHTCAST_SKILLS_TAXONOMY_NAME, orgs=None, enabled=True,
     )
 
     # Clear any existing Tags for lightcast_skills_taxonomy and create fresh ones
