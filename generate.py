@@ -37,6 +37,7 @@ from xmodule.contentstore.django import contentstore
 from openedx_tagging.core.tagging.models import Tag, Taxonomy
 
 from openedx_tagging.core.tagging.api import delete_tags_from_taxonomy, get_children_tags
+from openedx_tagging.core.tagging.import_export import api as import_api
 from openedx.core.djangoapps.content_tagging.api import (
     create_taxonomy, get_taxonomies_for_org,
     set_taxonomy_orgs, tag_content_object, get_content_tags,
@@ -228,9 +229,10 @@ MULTI_ORG_TAXONOMY_NAME = "MultiOrgTaxonomy"
 
 IMPORT_OPEN_CANADA_TAXONOMY = True
 IMPORT_LIGHTCAST_SKILLS_TAXONOMY = True
+IMPORT_WGU_TAXONOMY = True
 
 
-def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
+def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description="", old_name=None):
     """
     Get or create Taxonomy for Sample Taxonomy Orgs
 
@@ -246,21 +248,32 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True):
             taxonomy = Taxonomy.objects.get(name=name, enabled=enabled).cast()
         else:
             taxonomy = org_taxonomies.get(name=name, enabled=enabled).cast()
-        # Previous versions of this script and the platform didn't set allow_multiple=True, but we almost never want
-        # allow_multiple=False.
-        if not taxonomy.allow_multiple:
-            taxonomy.allow_multiple = True
-            taxonomy.save()
     except (Taxonomy.DoesNotExist, Taxonomy.MultipleObjectsReturned) as e:
-        if isinstance(e, Taxonomy.MultipleObjectsReturned):
-            # If for some reason there are multiple matching taxonomies,
-            # delete and start from scratch
-            Taxonomy.objects.filter(name=name, enabled=enabled).delete()
+        if old_name and isinstance(e, Taxonomy.DoesNotExist):
+            # Temporary code to deal with renamed taxonomies:
+            taxonomy = get_or_create_taxonomy(org_taxonomies, old_name, orgs, enabled, description)
+            taxonomy.name = name
+            taxonomy.save()
+        else:
+            if isinstance(e, Taxonomy.MultipleObjectsReturned):
+                # If for some reason there are multiple matching taxonomies,
+                # delete and start from scratch
+                Taxonomy.objects.filter(name=name, enabled=enabled).delete()
 
-        taxonomy = create_taxonomy(name=name, orgs=orgs, enabled=enabled, allow_multiple=True)
-        if org_taxonomies is None:
-            set_taxonomy_orgs(taxonomy, all_orgs=True)
+            taxonomy = create_taxonomy(name=name, orgs=orgs, enabled=enabled, allow_multiple=True)
 
+    if org_taxonomies is None:
+        set_taxonomy_orgs(taxonomy, all_orgs=True)
+    
+    if taxonomy.description != description:
+        taxonomy.description = description
+
+    # Previous versions of this script and the platform didn't set allow_multiple=True, but we almost never want
+    # allow_multiple=False.
+    if not taxonomy.allow_multiple:
+        taxonomy.allow_multiple = True
+
+    taxonomy.save()
     return taxonomy
 
 
@@ -434,7 +447,8 @@ store = modulestore()
 # Retrieve/Create multi org Taxonomy with 5 tags for the sample orgs
 logger.info(f"Creating or retrieving {MULTI_ORG_TAXONOMY_NAME}")
 multi_org_taxonomy = get_or_create_taxonomy(
-    None, MULTI_ORG_TAXONOMY_NAME, sample_orgs, enabled=True
+    None, MULTI_ORG_TAXONOMY_NAME, sample_orgs, enabled=True,
+    description="A taxonomy shared by multiple orgs.",
 )
 
 # Clear any existing Tags for hierarchical_taxonomy and create fresh ones
@@ -451,7 +465,7 @@ multi_org_taxonomy_tags = create_tags_for_multi_org_taxonomy(multi_org_taxonomy)
 
 
 if IMPORT_OPEN_CANADA_TAXONOMY:
-    OPEN_CANADA_TAXONOMY_NAME = "OpenCanadaTaxonomy"
+    OPEN_CANADA_TAXONOMY_NAME = "ESDC Skills and Competencies"
     OPEN_CANADA_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/open_canada_taxonomy.json"
 
     # Retrieve/Create Open Canada Taxonomy:
@@ -459,7 +473,12 @@ if IMPORT_OPEN_CANADA_TAXONOMY:
     # It has four levels (Category > Sub-Category > Similarity Group > Descriptor
     logger.info(f"Creating or retrieving {OPEN_CANADA_TAXONOMY_NAME}")
     open_canada_taxonomy = get_or_create_taxonomy(
-        None, OPEN_CANADA_TAXONOMY_NAME, sample_orgs, enabled=True
+        None, OPEN_CANADA_TAXONOMY_NAME, sample_orgs, enabled=True,
+        description=(
+            "Employment and Social Development Canada - Skills and Competencies Taxonomy (EN) 2023 Version 1.0. "
+            "Licence: Open Government Licence - Canada"
+        ),
+        old_name="OpenCanadaTaxonomy",
     )
 
     # Clear any existing Tags for open_canada_taxonomy and create fresh ones
@@ -482,15 +501,17 @@ if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
     LIGHTCAST_SKILLS_TAXONOMY_NAME = "Lightcast Open Skills Taxonomy"
     LIGHTCAST_SKILLS_TAXONOMY_PATH = f"{TAXONOMY_SAMPLE_PATH}/sample_data/lightcast_taxonomy.json"
 
-    # Delete the old version of this taxonomy with the previous name:
-    Taxonomy.objects.filter(name="LightCastSkillsTaxonomy").delete()
-
     # Retrieve/Create Lightcast Open Skills Taxonomy:
     # https://docs.google.com/spreadsheets/d/1DA3JfpBE5Krc0daImuu5Y0nsH93PEfdrWRrEa-sR-6k/edit#gid=1319222368
     # It has three levels (Category > Sub-Category > Skill
     logger.info(f"Creating or retrieving {LIGHTCAST_SKILLS_TAXONOMY_NAME}")
     lightcast_skills_taxonomy = get_or_create_taxonomy(
         None, LIGHTCAST_SKILLS_TAXONOMY_NAME, orgs=None, enabled=True,
+        description=(
+            "4,268 skill tags from the LightCast Open Skills Taxonomy. "
+            "Free for individual and not-for-profit use."
+        ),
+        old_name="LightCastSkillsTaxonomy",
     )
 
     # Clear any existing Tags for lightcast_skills_taxonomy and create fresh ones
@@ -507,6 +528,24 @@ if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
     logger.info(f"Creating fresh Tags for {lightcast_skills_taxonomy}")
 
     create_tags_from_json(lightcast_skills_taxonomy, LIGHTCAST_SKILLS_TAXONOMY_PATH)
+
+if IMPORT_WGU_TAXONOMY:
+    logger.info(f"Creating/updating WGU Instructional Design Taxonomy")
+    wgu_taxonomy = get_or_create_taxonomy(
+        name="WGU Instructional Design: K-12 Collection", orgs=None, org_taxonomies=None,
+        description=(
+            "Represents the necessary skills for instructional coordinators. "
+            "This collection of skills was developed in partnership with a panel of subject matter experts, "
+            "including instructional coordinators, instructional designers, learning development specialists, "
+            "and curriculum coordinators. Author: Western Governors University"
+        ),
+    )
+    # Source: https://osmt.wgu.edu/api/collections/85c93bc0-e0c1-4b7d-8511-ce559e70f4cd
+    with open(f"{TAXONOMY_SAMPLE_PATH}/sample_data/wgu_instructional_design_2023-01-29.csv", "rb") as file_handle:
+        result = import_api.import_tags(wgu_taxonomy, file_handle, parser_format=import_api.ParserFormat.CSV, replace=True)
+    if not result:
+        print(import_api.get_last_import_log(wgu_taxonomy))
+        raise Exception("Failed to import WGU taxonomy")
 
 
 for org in sample_orgs:
@@ -574,7 +613,8 @@ for org in sample_orgs:
     # Retrieve/Create flat Taxonomy with 5000 tags for org
     logger.info(f"Creating or retrieving {FLAT_TAXONOMY_NAME}")
     flat_taxonomy = get_or_create_taxonomy(
-        org_taxonomies, FLAT_TAXONOMY_NAME, [org], enabled=True
+        org_taxonomies, FLAT_TAXONOMY_NAME, [org], enabled=True,
+        description=f"A simple, flat taxonomy used by {org.name}",
     )
 
     # Clear any existing Tags for flat_taxonomy and create fresh ones
@@ -594,7 +634,8 @@ for org in sample_orgs:
     # each with 64 grandchild tags) for org
     logger.info(f"Creating or retrieving {HIERARCHICAL_TAXONOMY_NAME}")
     hierarchical_taxonomy = get_or_create_taxonomy(
-        org_taxonomies, HIERARCHICAL_TAXONOMY_NAME, [org], enabled=True
+        org_taxonomies, HIERARCHICAL_TAXONOMY_NAME, [org], enabled=True,
+        description=f"A sample three-level taxonomy used by {org.name}.",
     )
 
     # Clear any existing Tags for hierarchical_taxonomy and create fresh ones
@@ -614,7 +655,8 @@ for org in sample_orgs:
     # Retrieve/Create two level Taxonomy with 2 tag each level for org
     logger.info(f"Creating or retrieving {TWO_LEVEL_TAXONOMY_NAME}")
     two_level_taxonomy = get_or_create_taxonomy(
-        org_taxonomies, TWO_LEVEL_TAXONOMY_NAME, [org], enabled=True
+        org_taxonomies, TWO_LEVEL_TAXONOMY_NAME, [org], enabled=True,
+        description=f"A sample two-level taxonomy used by {org.name}.",
     )
 
     # Clear any existing tags for two_level_taxonomy and create fresh ones
