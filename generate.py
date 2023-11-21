@@ -37,6 +37,7 @@ from xmodule.contentstore.django import contentstore
 from openedx_tagging.core.tagging.models import Tag, Taxonomy
 
 from openedx_tagging.core.tagging.api import delete_tags_from_taxonomy, get_children_tags
+from openedx_tagging.core.tagging.import_export import api as import_api
 from openedx.core.djangoapps.content_tagging.api import (
     create_taxonomy, get_taxonomies_for_org,
     set_taxonomy_orgs, tag_content_object, get_content_tags,
@@ -228,6 +229,7 @@ MULTI_ORG_TAXONOMY_NAME = "MultiOrgTaxonomy"
 
 IMPORT_OPEN_CANADA_TAXONOMY = True
 IMPORT_LIGHTCAST_SKILLS_TAXONOMY = True
+IMPORT_WGU_TAXONOMY = True
 
 
 def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description="", old_name=None):
@@ -526,6 +528,24 @@ if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
     logger.info(f"Creating fresh Tags for {lightcast_skills_taxonomy}")
 
     create_tags_from_json(lightcast_skills_taxonomy, LIGHTCAST_SKILLS_TAXONOMY_PATH)
+
+if IMPORT_WGU_TAXONOMY:
+    logger.info(f"Creating/updating WGU Instructional Design Taxonomy")
+    wgu_taxonomy = get_or_create_taxonomy(
+        name="WGU Instructional Design: K-12 Collection", orgs=None, org_taxonomies=None,
+        description=(
+            "Represents the necessary skills for instructional coordinators. "
+            "This collection of skills was developed in partnership with a panel of subject matter experts, "
+            "including instructional coordinators, instructional designers, learning development specialists, "
+            "and curriculum coordinators. Author: Western Governors University"
+        ),
+    )
+    # Source: https://osmt.wgu.edu/api/collections/85c93bc0-e0c1-4b7d-8511-ce559e70f4cd
+    with open(f"{TAXONOMY_SAMPLE_PATH}/sample_data/wgu_instructional_design_2023-01-29.csv", "rb") as file_handle:
+        result = import_api.import_tags(wgu_taxonomy, file_handle, parser_format=import_api.ParserFormat.CSV, replace=True)
+    if not result:
+        print(import_api.get_last_import_log(wgu_taxonomy))
+        raise Exception("Failed to import WGU taxonomy")
 
 
 for org in sample_orgs:
