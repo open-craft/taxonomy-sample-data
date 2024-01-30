@@ -232,7 +232,9 @@ IMPORT_LIGHTCAST_SKILLS_TAXONOMY = True
 IMPORT_WGU_TAXONOMY = True
 
 
-def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description="", old_name=None):
+def get_or_create_taxonomy(
+    org_taxonomies, name, orgs, enabled=True, description="", old_name=None, export_id=None,
+):
     """
     Get or create Taxonomy for Sample Taxonomy Orgs
 
@@ -260,7 +262,21 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description
                 # delete and start from scratch
                 Taxonomy.objects.filter(name=name, enabled=enabled).delete()
 
-            taxonomy = create_taxonomy(name=name, orgs=orgs, enabled=enabled, allow_multiple=True)
+            update_export_id = False
+            if not export_id:
+                export_id = name.lower().replace(' ', '_')
+                update_export_id = True
+            taxonomy = create_taxonomy(
+                name=name,
+                export_id=export_id,
+                orgs=orgs,
+                enabled=enabled,
+                allow_multiple=True,
+            )
+            if update_export_id:
+                # Update export_id with taxonomy id to avoid duplicates.
+                taxonomy.export_id = f"{taxonomy.id}_{export_id}"
+            
 
     if org_taxonomies is None:
         set_taxonomy_orgs(taxonomy, all_orgs=True)
