@@ -532,7 +532,7 @@ if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
     delete_tags_from_taxonomy(
         lightcast_skills_taxonomy,
         list(map(lambda t: t["value"], lightcast_skills_taxonomy_tags)),
-        lightcast_skills_taxonomy_tags
+        with_subtags=True,
     )
 
     logger.info(f"Creating fresh Tags for {lightcast_skills_taxonomy}")
@@ -598,7 +598,7 @@ for org in sample_orgs:
 
     # Fetch all Taxonomies (enabled and disabled) for organization
     logger.info(f"Fetching all Taxonomies for {org}")
-    org_taxonomies = get_taxonomies_for_org(org_owner=org, enabled=None)
+    org_taxonomies = get_taxonomies_for_org(enabled=None, org_short_name=org.short_name)
 
     # Retrieve/Create disabled Taxonomy with 10 tags for org
     logger.info(f"Creating or retrieving {DISABLED_TAXONOMY_NAME}")
@@ -677,7 +677,7 @@ for org in sample_orgs:
     delete_tags_from_taxonomy(
         two_level_taxonomy,
         list(map(lambda t: t["value"], two_level_taxonomy_tags)),
-        two_level_taxonomy_tags
+        with_subtags=True,
     )
 
     logger.info(f"Creating fresh Tags for {two_level_taxonomy}")
