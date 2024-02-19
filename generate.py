@@ -260,7 +260,13 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description
                 # delete and start from scratch
                 Taxonomy.objects.filter(name=name, enabled=enabled).delete()
 
-            taxonomy = create_taxonomy(name=name, orgs=orgs, enabled=enabled, allow_multiple=True)
+            taxonomy = create_taxonomy(
+                name=name,
+                description=description,
+                orgs=orgs,
+                enabled=enabled,
+                allow_multiple=True
+            )
 
     if org_taxonomies is None:
         set_taxonomy_orgs(taxonomy, all_orgs=True)
