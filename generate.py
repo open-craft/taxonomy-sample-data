@@ -40,7 +40,7 @@ from openedx_tagging.core.tagging.api import delete_tags_from_taxonomy, get_chil
 from openedx_tagging.core.tagging.import_export import api as import_api
 from openedx.core.djangoapps.content_tagging.api import (
     create_taxonomy, get_taxonomies_for_org,
-    set_taxonomy_orgs, tag_content_object, get_content_tags,
+    set_taxonomy_orgs, tag_object, get_object_tags,
     resync_object_tags, get_tags
 )
 
@@ -423,11 +423,15 @@ def tagify_object(object_id, taxonomies):
             if second_tag:
                 tag_values.append(second_tag["value"])
         try:
-            tag_content_object(object_id, taxonomy, tag_values)
+            tag_object(
+                object_id=object_id,
+                taxonomy=taxonomy,
+                tags=tag_values
+            )
         except IntegrityError:
             # content tag value already exists, we need to resync with
             # new tag instance
-            content_tags = list(get_content_tags(object_id, taxonomy.id))
+            content_tags = get_object_tags(object_id, taxonomy.id)
             resync_object_tags(content_tags)
 
 
