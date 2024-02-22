@@ -40,7 +40,7 @@ from openedx_tagging.core.tagging.api import delete_tags_from_taxonomy, get_chil
 from openedx_tagging.core.tagging.import_export import api as import_api
 from openedx.core.djangoapps.content_tagging.api import (
     create_taxonomy, get_taxonomies_for_org,
-    set_taxonomy_orgs, tag_content_object, get_content_tags,
+    set_taxonomy_orgs, tag_object, get_object_tags,
     resync_object_tags, get_tags
 )
 
@@ -260,7 +260,13 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description
                 # delete and start from scratch
                 Taxonomy.objects.filter(name=name, enabled=enabled).delete()
 
-            taxonomy = create_taxonomy(name=name, orgs=orgs, enabled=enabled, allow_multiple=True)
+            taxonomy = create_taxonomy(
+                name=name,
+                description=description,
+                orgs=orgs,
+                enabled=enabled,
+                allow_multiple=True
+            )
 
     if org_taxonomies is None:
         set_taxonomy_orgs(taxonomy, all_orgs=True)
@@ -423,11 +429,15 @@ def tagify_object(object_id, taxonomies):
             if second_tag:
                 tag_values.append(second_tag["value"])
         try:
-            tag_content_object(object_id, taxonomy, tag_values)
+            tag_object(
+                object_id=object_id,
+                taxonomy=taxonomy,
+                tags=tag_values
+            )
         except IntegrityError:
             # content tag value already exists, we need to resync with
             # new tag instance
-            content_tags = list(get_content_tags(object_id, taxonomy.id))
+            content_tags = get_object_tags(object_id, taxonomy.id)
             resync_object_tags(content_tags)
 
 
@@ -522,7 +532,7 @@ if IMPORT_LIGHTCAST_SKILLS_TAXONOMY:
     delete_tags_from_taxonomy(
         lightcast_skills_taxonomy,
         list(map(lambda t: t["value"], lightcast_skills_taxonomy_tags)),
-        lightcast_skills_taxonomy_tags
+        with_subtags=True,
     )
 
     logger.info(f"Creating fresh Tags for {lightcast_skills_taxonomy}")
@@ -588,7 +598,7 @@ for org in sample_orgs:
 
     # Fetch all Taxonomies (enabled and disabled) for organization
     logger.info(f"Fetching all Taxonomies for {org}")
-    org_taxonomies = get_taxonomies_for_org(org_owner=org, enabled=None)
+    org_taxonomies = get_taxonomies_for_org(enabled=None, org_short_name=org.short_name)
 
     # Retrieve/Create disabled Taxonomy with 10 tags for org
     logger.info(f"Creating or retrieving {DISABLED_TAXONOMY_NAME}")
@@ -667,7 +677,7 @@ for org in sample_orgs:
     delete_tags_from_taxonomy(
         two_level_taxonomy,
         list(map(lambda t: t["value"], two_level_taxonomy_tags)),
-        two_level_taxonomy_tags
+        with_subtags=True,
     )
 
     logger.info(f"Creating fresh Tags for {two_level_taxonomy}")
