@@ -18,7 +18,7 @@ from django.db import IntegrityError
 
 from organizations.models import Organization
 
-from openedx.core.lib.extract_tar import safetar_extractall
+from openedx.core.lib.extract_archive import safe_extractall
 
 from cms.djangoapps.contentstore.views.course import create_new_course_in_store
 from cms.djangoapps.contentstore import errors as UserErrors
@@ -155,14 +155,8 @@ def import_tarfile_in_course(tarfile_path, course_key, user_id):
 
     # try-finally block for proper clean up after receiving file.
     try:
-        tar_file = tarfile.open(tarfile_path)
-        try:
-            safetar_extractall(tar_file, (course_dir + '/'))
-        except SuspiciousOperation as exc:
-            logger.error(f'Unsafe tar file')
-            return
-        finally:
-            tar_file.close()
+        safe_extractall(tarfile_path, (course_dir + '/'))
+
         logger.info('Course tar file extracted. Verification step started')
 
         dirpath = verify_root_name_exists(course_dir, root_name)
@@ -189,6 +183,9 @@ def import_tarfile_in_course(tarfile_path, course_key, user_id):
         logger.debug('new course at %s', new_location)
 
         logger.info(f'Course import successful')
+
+    except SuspiciousOperation as exc:
+        logger.error(f'Unsafe tar file')
     except (CourseImportException, InvalidProctoringProvider, DuplicateCourseError) as known_exe:
         logger.exception(f"Error while importing course: {known_exe}")
     except Exception as exception:  # pylint: disable=broad-except
