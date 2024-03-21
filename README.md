@@ -21,8 +21,12 @@ Running this script will do the following:
 
 ### Getting Started
 
-1. To begin, clone this repo inside a directory so it can be accessed from within the devstack (eg: `/edx/src/`)
-1. Set the `TAXONOMY_SAMPLE_PATH` variable inside the `generate.py` file to point to the cloned repo inside your devstack/tutor environment, eg: `/edx/src/taxonomy-sample-data`
+1. To begin, clone this repo to your host computer.
+   * If you use Tutor devstack, mount it using this comamnd:
+     ```
+     tutor mounts add cms:/host/path/to/taxonomy-sample-data:/openedx/taxonomy-sample-data
+     ```
+   * If you use "devstack", put the cloned repo inside a directory so it can be accessed from within the devstack (eg: `/edx/src/`), and set the `TAXONOMY_SAMPLE_PATH` variable inside the `generate.py` file to point to the cloned repo inside your devstack/tutor environment, eg: `/edx/src/taxonomy-sample-data`
 1. Set the `USER_EMAIL` variable in `generate.py` to the user the courses/units will be created under. It defaults to `edx@example.com`.
 1. (Optional) If you would not like to include taxonomy data from real world examples, such as:
     - [Open Canada Taxonomy](https://open.canada.ca/data/en/dataset/6093c709-2a0d-4c23-867e-27987a79212c/resource/0a120b15-9708-4d8a-8af2-2431c4540c0b)
@@ -35,9 +39,9 @@ Running this script will do the following:
     IMPORT_LIGHTCAST_SKILLS_TAXONOMY = True
     ```
 
-1. To run the script, enter the LMS shell (`make lms-shell`) and run the following command:
+1. To run the script, enter the CMS shell (`tutor dev run cms bash`) and run the following command:
     ```sh
-    python manage.py cms shell < /path/to/taxonomy-sample-data/generate.py
+    python manage.py cms shell < /openedx/taxonomy-sample-data/generate.py
     ```
 
 ### License Information

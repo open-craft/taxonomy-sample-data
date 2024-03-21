@@ -205,7 +205,7 @@ USER_EMAIL = "edx@example.com"
 user = User.objects.get(email=USER_EMAIL)
 
 # Set to path where repo was cloned, eg: /edx/src/taxonomy-sample-data
-TAXONOMY_SAMPLE_PATH = None
+TAXONOMY_SAMPLE_PATH = "/openedx/taxonomy-sample-data"
 
 if TAXONOMY_SAMPLE_PATH is None:
     raise Exception("`TAXONOMY_SAMPLE_PATH` not set. Please set it in generate.py")
