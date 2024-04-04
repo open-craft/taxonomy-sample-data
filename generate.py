@@ -427,7 +427,7 @@ def tagify_object(object_id, taxonomies):
                 tag_values.append(second_tag["value"])
         try:
             tag_object(
-                object_id=object_id,
+                object_id=str(object_id),
                 taxonomy=taxonomy,
                 tags=tag_values
             )
