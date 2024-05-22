@@ -36,11 +36,11 @@ from xmodule.contentstore.django import contentstore
 
 from openedx_tagging.core.tagging.models import Tag, Taxonomy
 
-from openedx_tagging.core.tagging.api import delete_tags_from_taxonomy, get_children_tags
+from openedx_tagging.core.tagging.api import delete_tags_from_taxonomy, get_children_tags, tag_object
 from openedx_tagging.core.tagging.import_export import api as import_api
 from openedx.core.djangoapps.content_tagging.api import (
     create_taxonomy, get_taxonomies_for_org,
-    set_taxonomy_orgs, tag_object, get_object_tags,
+    set_taxonomy_orgs, get_object_tags,
     resync_object_tags, get_tags
 )
 
@@ -223,22 +223,26 @@ FLAT_TAXONOMY_NAME = "FlatTaxonomy"
 HIERARCHICAL_TAXONOMY_NAME = "HierarchicalTaxonomy"
 TWO_LEVEL_TAXONOMY_NAME = "TwoLevelTaxonomy"
 MULTI_ORG_TAXONOMY_NAME = "MultiOrgTaxonomy"
+NONE_ORG_TAXONOMY_NAME = "NoneOrgTaxonomy"
 
 IMPORT_OPEN_CANADA_TAXONOMY = True
 IMPORT_LIGHTCAST_SKILLS_TAXONOMY = True
 IMPORT_WGU_TAXONOMY = True
 
 
-def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description="", old_name=None):
+def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description="", old_name=None, all_orgs=True):
     """
     Get or create Taxonomy for Sample Taxonomy Orgs
 
     Arguments:
         org_taxonomies: Queryset of an org's existing taxonomies or
-                        None if it should be for all orgs
+                        None if it should be for all orgs or None orgs
         name: Taxonomy name
         enabled: Whether Taxonomy is enabled/disabled
         orgs: List of orgs Taxonomy belongs to
+        all_orgs: Used if org_taxonomies is None.
+                  True if it should be for all orgs.
+                  False if it should be for None orgs.
     """
     try:
         if org_taxonomies is None:
@@ -265,7 +269,7 @@ def get_or_create_taxonomy(org_taxonomies, name, orgs, enabled=True, description
                 allow_multiple=True
             )
 
-    if org_taxonomies is None:
+    if org_taxonomies is None and all_orgs:
         set_taxonomy_orgs(taxonomy, all_orgs=True)
     
     if taxonomy.description != description:
@@ -373,6 +377,18 @@ def create_tags_for_multi_org_taxonomy(multi_org_taxonomy):
         )
 
 
+def create_tags_for_none_org_taxonomy(none_org_taxonomy):
+    """
+    Create 3^x Tags across 3 levels for the none_org_taxonomy
+    """
+    MAX_LEVELS = 3
+    TAGS_MULTIPLIER = 3
+    _create_tags_recursively(
+        1, MAX_LEVELS, TAGS_MULTIPLIER,
+        none_org_taxonomy, "none org tag", parent=None
+    )
+
+
 def create_tags_from_json(open_canada_taxonomy, import_json_path):
     """
     Create tags based what is defined in JSON import spec
@@ -470,6 +486,26 @@ delete_tags_from_taxonomy(
 logger.info(f"Creating fresh Tags for {multi_org_taxonomy}")
 multi_org_taxonomy_tags = create_tags_for_multi_org_taxonomy(multi_org_taxonomy)
 
+
+# Retrieve/Create none org Taxonomy
+logger.info(f"Creating or retrieving {NONE_ORG_TAXONOMY_NAME}")
+none_org_taxonomy = get_or_create_taxonomy(
+    None, NONE_ORG_TAXONOMY_NAME, [], enabled=True,
+    description="A taxonomy with none associated orgs.",
+    all_orgs=False,
+)
+
+# Clear any existing Tags for none_org_taxonomy and create fresh ones
+none_org_taxonomy_tags = get_tags(none_org_taxonomy)
+logger.info(f"Clearing existing {len(none_org_taxonomy_tags)} Tags for {none_org_taxonomy}")
+delete_tags_from_taxonomy(
+    none_org_taxonomy,
+    list(map(lambda t: t["value"], none_org_taxonomy_tags)),
+    with_subtags=True
+)
+
+logger.info(f"Creating fresh Tags for {none_org_taxonomy}")
+none_org_taxonomy_tags = create_tags_for_none_org_taxonomy(none_org_taxonomy)
 
 if IMPORT_OPEN_CANADA_TAXONOMY:
     OPEN_CANADA_TAXONOMY_NAME = "ESDC Skills and Competencies"
@@ -682,7 +718,8 @@ for org in sample_orgs:
 
     generated_taxonomies += [
         disabled_taxonomy, flat_taxonomy,
-        hierarchical_taxonomy, two_level_taxonomy
+        hierarchical_taxonomy, two_level_taxonomy,
+        none_org_taxonomy,
     ]
 
     # Tagging Courses and Components
